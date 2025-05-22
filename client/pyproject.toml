@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "neuralake"
-version = "0.0.16"
+version = "0.0.1"
 authors = [
   { name="Gautham Acharya", email="gautacharya@gmail.com" },
 ]
 description = "The Neuralake catalog interface"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
@@ -20,15 +20,14 @@ dependencies = [
     "polars==1.9.0",
     "pyarrow==17.0.0",
     "ipython==8.5.0",
-    "pyyaml==5.3.1",
-    "mkdocs>=1.5.0",
-    "mkdocstrings",
-    "mkdocstrings-python>=1.7.0",
-    "typing_extensions==4.13.2"
 ]
 
 [project.optional-dependencies]
 dev = [
+    "mkdocs>=1.5.0",
+    "mkdocstrings",
+    "mkdocstrings-python>=1.7.0",
+    "typing_extensions==4.13.2",
     "mkdocs-material",
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
