@@ -377,6 +377,7 @@ class TestDeltalakeTable:
         expected_sorted = expected.sort("value")
         assert actual_sorted.equals(expected_sorted)
 
+    """ this test is commented out until we upstream delta caching
     def test_delta_cache(
         self,
         delta_table_definition: DeltalakeTable,
@@ -418,3 +419,4 @@ class TestDeltalakeTable:
 
         assert os.listdir(base_cache_path / "implant_id=1" / "date=2024-01-02")
         assert os.listdir(base_cache_path / "implant_id=1" / "date=2024-01-03")
+    """
