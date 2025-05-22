@@ -1,0 +1,10 @@
+boto3==1.26.20
+deltalake==0.25.4
+polars==1.9.0
+pyarrow==17.0.0
+ipython==8.5.0
+pyyaml==6.0
+mkdocs>=1.5.0
+mkdocstrings
+mkdocstrings[python]>=0.24.0
+mkdocstrings-python>=1.7.0

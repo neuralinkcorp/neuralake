@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "neuralake"
+version = "0.0.16"
+authors = [
+  { name="Gautham Acharya", email="gautacharya@gmail.com" },
+]
+description = "The Neuralake catalog interface"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "boto3==1.26.20",
+    "deltalake==0.25.4",
+    "polars==1.9.0",
+    "pyarrow==17.0.0",
+    "ipython==8.5.0",
+    "pyyaml==6.0",
+    "mkdocs>=1.5.0",
+    "mkdocstrings",
+    "mkdocstrings-python>=1.7.0",
+    "typing_extensions==4.13.2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "flake8>=6.0.0",
+    "mypy>=1.0.0"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["neuralake"]
+only-include = ["neuralake"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[project.urls]
+Homepage = "https://github.com/neuralinkcorp/neuralake_client"
+Issues = "https://github.com/neuralinkcorp/neuralake_client/issues"

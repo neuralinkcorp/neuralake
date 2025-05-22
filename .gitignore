@@ -1,0 +1,5 @@
+dist/
+**/*/__pycache__/*
+venv/
+.env
+site/

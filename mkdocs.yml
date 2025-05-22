@@ -1,0 +1,75 @@
+site_name: Neuralake
+site_url: https://neuralink.github.io/neuralake
+repo_url: https://github.com/neuralinkcorp/neuralake/
+repo_name: neuralink/neuralake
+
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: black
+    accent: white
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - search.share
+    - toc.integrate
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+  logo: images/banner4.png
+  favicon: images/logo.png
+  custom_dir: docs/stylesheets
+  icon:
+    repo: fontawesome/brands/github
+
+extra_javascript:
+  - javascripts/shortcuts.js
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  
+
+extra_css:
+  - stylesheets/extra.css
+
+docs_dir: docs
+site_dir: site
+
+nav:
+  - Home: /
+  - Getting Started: getting-started.md
+  - User Guide: user-guide.md 

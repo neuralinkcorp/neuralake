@@ -1,0 +1,167 @@
+name: Test, Build and Publish
+
+on:
+  push:
+    branches:
+      - dev
+  release:
+    types: [created]
+  workflow_dispatch:  # Allows manual triggering
+
+permissions:
+  contents: write
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.version_check.outputs.should_build }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 2  # Need at least 2 commits to compare
+    
+    - name: Check version bump
+      id: version_check
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "Manual trigger - proceeding with build"
+          echo "should_build=true" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        if [ "${{ github.event_name }}" = "release" ]; then
+          echo "Release event - proceeding with build"
+          echo "should_build=true" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        # Get the current and previous version from pyproject.toml
+        CURRENT_VERSION=$(grep '^version = ' client/pyproject.toml | cut -d'"' -f2)
+        git checkout HEAD~1
+        PREVIOUS_VERSION=$(grep '^version = ' client/pyproject.toml | cut -d'"' -f2)
+        git checkout -
+        
+        if [ "$CURRENT_VERSION" = "$PREVIOUS_VERSION" ]; then
+          echo "Version not changed (current: $CURRENT_VERSION, previous: $PREVIOUS_VERSION)"
+          echo "should_build=false" >> $GITHUB_OUTPUT
+          exit 0
+        fi
+        
+        echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+        echo "should_build=true" >> $GITHUB_OUTPUT
+        exit 0
+
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python3.10 -m pip install --upgrade pip
+        cd client
+        python3.10 -m pip install --no-cache-dir -e ".[dev]"
+    
+    - name: Run tests with coverage
+      run: |
+        cd client
+        pytest neuralake/test --cov=neuralake --cov-report=term-missing
+
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        cd client
+        pip install -e ".[dev]"
+    
+    - name: Run flake8
+      run: |
+        cd client
+        flake8 neuralake --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 neuralake --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Run black
+      run: |
+        cd client
+        black --check neuralake
+    
+    - name: Run mypy
+      run: |
+        cd client
+        #mypy neuralake
+
+  build-and-publish:
+    needs: [check-version, run-tests, code-quality]
+    if: |
+      needs.check-version.outputs.should_build == 'true' &&
+      needs.run-tests.result == 'success' &&
+      needs.code-quality.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build twine
+      
+      - name: Build package
+        run: |
+          cd client
+          python -m build
+      
+      - name: Publish package to PyPI
+        env:
+          TWINE_USERNAME: "__token__"
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          cd client
+          twine upload --repository testpypi dist/* --verbose
+
+  build-and-publish-docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs-material mkdocstrings[python]
+      
+      - name: Build documentation
+        run: |
+          mkdocs build
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          publish_branch: gh-pages
