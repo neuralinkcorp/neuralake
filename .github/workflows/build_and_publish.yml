@@ -3,7 +3,7 @@ name: Test, Build and Publish
 on:
   push:
     branches:
-      - dev
+      - initial-commit
   release:
     types: [created]
   workflow_dispatch:  # Allows manual triggering
