@@ -20,7 +20,7 @@ dependencies = [
     "polars==1.9.0",
     "pyarrow==17.0.0",
     "ipython==8.5.0",
-    "pyyaml==6.0",
+    "pyyaml==5.3.1",
     "mkdocs>=1.5.0",
     "mkdocstrings",
     "mkdocstrings-python>=1.7.0",
@@ -29,6 +29,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "mkdocs-material",
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "black>=23.0.0",

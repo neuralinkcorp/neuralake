@@ -21,7 +21,7 @@ theme:
     - content.code.annotate
     - content.code.copy
     - content.tooltips
-  logo: images/banner4.png
+  logo: images/banner.png
   favicon: images/logo.png
   custom_dir: docs/stylesheets
   icon:
@@ -48,9 +48,6 @@ markdown_extensions:
   - pymdownx.caret
   - pymdownx.critic
   - pymdownx.details
-  - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
   - pymdownx.highlight
   - pymdownx.inlinehilite
   - pymdownx.keys
