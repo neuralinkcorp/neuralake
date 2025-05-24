@@ -29,6 +29,7 @@ theme:
 
 extra_javascript:
   - javascripts/shortcuts.js
+  - examples/web_catalog/assets/*.js
 
 plugins:
   - search
@@ -62,6 +63,7 @@ markdown_extensions:
 
 extra_css:
   - stylesheets/extra.css
+  - examples/web_catalog/assets/*.css
 
 docs_dir: docs
 site_dir: site
@@ -69,4 +71,6 @@ site_dir: site
 nav:
   - Home: /
   - Getting Started: getting-started.md
-  - User Guide: user-guide.md 
+  - User Guide: user-guide.md
+  - Examples:
+    - Catalog: catalog.md

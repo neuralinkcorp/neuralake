@@ -24,6 +24,7 @@ export async function generateSite(config, outputDir) {
   
   await build({
     root: path.join(packageRoot, 'src'),
+    base: './',
     build: {
       outDir: outputDir,
       emptyOutDir: true,

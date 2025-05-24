@@ -3,3 +3,5 @@ dist/
 venv/
 .env
 site/
+
+docs/examples/web_catalog/
