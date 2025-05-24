@@ -5,6 +5,21 @@
     background-color: #000000;
 }
 
+/* Center iframe and image */
+iframe {
+    display: block;
+    margin: 0 auto;
+    width: 100% !important;
+    height: 600px !important;
+    overflow: auto;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
 /* Hide GitHub-only content in MkDocs */
 .github-only {
     display: none !important;
@@ -48,10 +63,6 @@
     z-index: 2;
 }
 
-/* Hide GitHub text */
-.md-header__source .md-source__repository {
-    display: none;
-}
 
 /* Style GitHub icon */
 .md-header__source .md-source__icon {
@@ -129,6 +140,20 @@
 
 .md-search__input::-webkit-input-placeholder {
     content: "Search (⌘K)";
+}
+
+.md-grid {
+    width: 100%; 
+    min-width: 100%;
+  }
+  
+.md-content {
+    width: 80%;
+    min-width: 100%;
+}
+
+.md-sidebar {
+    width: 0;
 }
 
 .md-search__input::-moz-placeholder {

@@ -487,17 +487,22 @@
 </div>
 
 <h1 id="neuralake-a-simple-platform-for-complex-data">Neuralake: A simple platform for complex data<a class="headerlink" href="#neuralake-a-simple-platform-for-complex-data" title="Permanent link">&para;</a></h1>
-<div align="center">
-    <!-- GitHub will ignore this iframe but mkdocs will render it -->
-    <iframe src="examples/web_catalog/index.html" width="100%" height="600px" frameborder="0"></iframe>
-    <br><br>
-    <img src="images/catalog.png" alt="Neuralake logo">
-</div>
-
 <p>Neuralake is a simple query interface for multimodal data at any scale. </p>
 <p>With Neuralake, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!</p>
 <p>The Neuralake client has native, declarative connectors to <a href="https://delta.io/">Delta Lake</a> and <a href="https://parquet.apache.org/">Parquet</a> stores. Neuralake also supports defining tables via custom Python functions, so you can connect to any data source!</p>
-<p>See the example catalog <a href="examples/web_catalog/">here</a></p>
+<p>Here's an example catalog:</p>
+<div align="center" style="position: relative;">
+    <button onclick="window.open('examples/web_catalog/index.html', '_blank')" style="position: absolute; top: -40px; right: 10px; z-index: 1000; padding: 8px; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+    </button>
+    <iframe src="examples/web_catalog/index.html" frameborder="0"></iframe>
+    <br><br>
+</div>
+
 <h2 id="key-features">Key features<a class="headerlink" href="#key-features" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Unified interface</strong>: Query data across different storage modalities (Parquet, DeltaLake, relational databases)</li>
