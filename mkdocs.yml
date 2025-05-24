@@ -72,5 +72,6 @@ nav:
   - Home: /
   - Getting Started: getting-started.md
   - User Guide: user-guide.md
-  - Examples:
-    - Catalog: catalog.md
+
+hooks:
+  - docs/hooks.py

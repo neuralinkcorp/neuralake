@@ -7,47 +7,51 @@
 A table in Neuralake is a Python function that returns an `NlkDataFrame`. An `NlkDataFrame` is a thin wrapper of the [polars LazyFrame](https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html). Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by [DeltaLake](https://delta.io/) tables, [Parquet tables](https://parquet.apache.org/), or pure Python functions.
 
 #### DeltaLake tables
-DeltaLake tables provide efficient access to DeltaLake tables:
-
 ```python
 from neuralake.core.tables import DeltalakeTable
 import pyarrow as pa
 
 # Define the schema
 schema = pa.schema([
-    ("timestamp", pa.timestamp("ns")),
-    ("value", pa.float64()),
+    ("s_suppkey", pa.int64()),
+    ("s_name", pa.string()),
+    ("s_address", pa.string()),
+    ("s_nationkey", pa.int64()),
+    ("s_phone", pa.string()),
+    ("s_acctbal", pa.decimal128(12, 2)),
+    ("s_comment", pa.string()),
 ])
 
 # Create the table
-spikes = DeltalakeTable(
-    name="spikes",
-    uri="s3://my-bucket/spikes",
+supplier = DeltalakeTable(
+    name="supplier",
+    uri="s3://my-bucket/tpc-h/supplier/",
     schema=schema,
-    description="Neural spike data",
-    unique_columns=["timestamp"],
+    description="Supplier information from the TPC-H benchmark",
+    unique_columns=["s_suppkey"],
 )
 ```
 
 #### Parquet tables
-Allow for querying parquet data:
-
 ```python
 from neuralake.core.tables import ParquetTable, Partition, PartitioningScheme
+import pyarrow as pa
 
-# Define partitions
-partitions = [
-    Partition("date", str),
-    Partition("subject_id", str),
-]
+# Define the schema
+schema = pa.schema([
+    ("ps_partkey", pa.int64()),
+    ("ps_suppkey", pa.int64()),
+    ("ps_availqty", pa.int32()),
+    ("ps_supplycost", pa.decimal128(12, 2)),
+    ("ps_comment", pa.string()),
+])
 
 # Create the table
-spikes = ParquetTable(
-    name="spikes",
-    uri="s3://my-bucket/spikes",
-    partitioning=partitions,
-    partitioning_scheme=PartitioningScheme.HIVE,
-    description="Neural spike data",
+partsupp = ParquetTable(
+    name="partsupp",
+    uri="s3://my-bucket/tpc-h/partsupp",
+    schema=schema,
+    description="Part supplier relationship information from the TPC-H benchmark",
 )
 ```
 
@@ -59,13 +63,16 @@ from neuralake.core.tables import table
 import polars as pl
 
 @table
-def my_custom_table() -> NlkDataFrame:
-    """A custom table that returns data from any source."""
-    # Create a sample dataframe with neural spike data
+def supplier_sample() -> NlkDataFrame:
+    """A custom table that returns sample supplier data."""
     data = {
-        "timestamp": ["2024-01-01", "2024-01-01", "2024-01-01", "2024-01-01", "2024-01-01"],
-        "value": [0.123, 0.456, 0.789, 0.321, 0.654],
-        "channel": [1, 2, 3, 4, 5]
+        "s_suppkey": [1, 2, 3, 4, 5],
+        "s_name": ["Supplier#1", "Supplier#2", "Supplier#3", "Supplier#4", "Supplier#5"],
+        "s_address": ["123 Main St", "456 Oak Ave", "789 Pine Rd", "321 Elm St", "654 Maple Dr"],
+        "s_nationkey": [1, 1, 2, 2, 3],
+        "s_phone": ["555-0001", "555-0002", "555-0003", "555-0004", "555-0005"],
+        "s_acctbal": [1000.00, 2000.00, 3000.00, 4000.00, 5000.00],
+        "s_comment": ["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5"]
     }
     return NlkDataFrame(frame=pl.LazyFrame(data))
 ```
@@ -82,13 +89,13 @@ A module database wraps a Python module containing table definitions:
 from neuralake.core.tables import table
 
 @table
-def spikes():
-    """Neural spike data."""
+def supplier():
+    """Supplier information."""
     return NlkDataFrame(...)
 
 @table
-def events():
-    """Behavioral events."""
+def partsupp():
+    """Part supplier relationship information."""
     return NlkDataFrame(...)
 
 # Using the database
@@ -98,18 +105,18 @@ import my_database
 db = ModuleDatabase(my_database)
 
 # Query data
->>> df = db.spikes()
+>>> df = db.supplier()
 >>> df.head()
-shape: (5, 3)
-┌────────────┬─────────┬─────────┐
-│ timestamp  │ value   │ channel │
-├────────────┼─────────┼─────────┤
-│ 2024-01-01 │ 0.123   │ 1       │
-│ 2024-01-01 │ 0.456   │ 2       │
-│ 2024-01-01 │ 0.789   │ 3       │
-│ 2024-01-01 │ 0.321   │ 4       │
-│ 2024-01-01 │ 0.654   │ 5       │
-└────────────┴─────────┴─────────┘
+shape: (5, 7)
+┌──────────┬───────────┬────────────┬────────────┬──────────┬──────────┬──────────┐
+│ s_suppkey│ s_name    │ s_address  │ s_nationkey│ s_phone  │ s_acctbal│ s_comment│
+├──────────┼───────────┼────────────┼────────────┼──────────┼──────────┼──────────┤
+│ 1        │ Supplier#1│ 123 Main St│ 1          │ 555-0001 │ 1000.00  │ Comment 1│
+│ 2        │ Supplier#2│ 456 Oak Ave│ 1          │ 555-0002 │ 2000.00  │ Comment 2│
+│ 3        │ Supplier#3│ 789 Pine Rd│ 2          │ 555-0003 │ 3000.00  │ Comment 3│
+│ 4        │ Supplier#4│ 321 Elm St │ 2          │ 555-0004 │ 4000.00  │ Comment 4│
+│ 5        │ Supplier#5│ 654 Maple Dr│ 3         │ 555-0005 │ 5000.00  │ Comment 5│
+└──────────┴───────────┴────────────┴────────────┴──────────┴──────────┴──────────┘
 ```
 
 #### Custom database
@@ -121,8 +128,8 @@ from neuralake.core.catalog import Database, TableProtocol
 class MyDatabase(Database):
     def __init__(self):
         self._tables = {
-            "spikes": DeltalakeTable(...),
-            "events": ParquetTable(...),
+            "supplier": DeltalakeTable(...),
+            "partsupp": ParquetTable(...),
         }
 
     def get_tables(self, show_deprecated: bool = False) -> dict[str, TableProtocol]:
@@ -134,38 +141,38 @@ class MyDatabase(Database):
 
 ### Catalogs
 
-A catalog in Neuralake is a Python module that is a collection of databases. It provides a unified interface to access data across multiple databases:
+A catalog is a Python module that is a collection of databases.
 
 ```python
 from neuralake.core.catalog import Catalog, ModuleDatabase
-import neural_spikes
-import behavioral_data
+import supplier_data
+import partsupp_data
 
 # Create a catalog
 dbs = {
-    "neural_spikes": ModuleDatabase(neural_spikes),
-    "behavioral_data": ModuleDatabase(behavioral_data),
+    "supplier_data": ModuleDatabase(supplier_data),
+    "partsupp_data": ModuleDatabase(partsupp_data),
 }
 
 MyCatalog = Catalog(dbs)
 
 # Query data across databases
->>> spikes = MyCatalog.db("neural_spikes").spikes()
->>> events = MyCatalog.db("behavioral_data").events()
+>>> supplier = MyCatalog.db("supplier_data").supplier()
+>>> partsupp = MyCatalog.db("partsupp_data").partsupp()
 
 # Join data across databases
->>> joined = spikes.join(events, on="timestamp")
+>>> joined = supplier.join(partsupp, left_on="s_suppkey", right_on="ps_suppkey")
 >>> joined.head()
-shape: (5, 5)
-┌────────────┬─────────┬─────────┬─────────┬────────────┐
-│ timestamp  │ value   │ channel │ event   │ event_time │
-├────────────┼─────────┼─────────┼─────────┼────────────┤
-│ 2024-01-01 │ 0.123   │ 1       │ start   │ 2024-01-01 │
-│ 2024-01-01 │ 0.456   │ 2       │ start   │ 2024-01-01 │
-│ 2024-01-01 │ 0.789   │ 3       │ stop    │ 2024-01-01 │
-│ 2024-01-01 │ 0.321   │ 4       │ stop    │ 2024-01-01 │
-│ 2024-01-01 │ 0.654   │ 5       │ start   │ 2024-01-01 │
-└────────────┴─────────┴─────────┴─────────┴────────────┘
+shape: (5, 12)
+┌──────────┬───────────┬────────────┬────────────┬──────────┬──────────┬──────────┬──────────┬──────────┬────────────┬─────────────┬────────── ┐
+│ s_suppkey│ s_name    │ s_address  │ s_nationkey│ s_phone  │ s_acctbal│ s_comment│ps_partkey│ps_suppkey│ps_availqty │ps_supplycost│ps_comment │
+├──────────┼───────────┼────────────┼────────────┼──────────┼──────────┼──────────┼──────────┼──────────┼────────────┼─────────────┼───────────┤
+│ 1        │ Supplier#1│ 123 Main St│ 1          │ 555-0001 │ 1000.00  │ Comment 1│ 1        │ 1        │ 100        │ 100.00      │ Part 1    │
+│ 2        │ Supplier#2│ 456 Oak Ave│ 1          │ 555-0002 │ 2000.00  │ Comment 2│ 2        │ 2        │ 200        │ 200.00      │ Part 2    │
+│ 3        │ Supplier#3│ 789 Pine Rd│ 2          │ 555-0003 │ 3000.00  │ Comment 3│ 3        │ 3        │ 300        │ 300.00      │ Part 3    │
+│ 4        │ Supplier#4│ 321 Elm St │ 2          │ 555-0004 │ 4000.00  │ Comment 4│ 4        │ 4        │ 400        │ 400.00      │ Part 4    │
+│ 5        │ Supplier#5│ 654 Maple D│  3         │ 555-0005 │ 5000.00  │ Comment 5│ 5        │ 5        │ 500        │ 500.00      │ Part 5    │
+└──────────┴───────────┴────────────┴────────────┴──────────┴──────────┴──────────┴──────────┴──────────┴────────────┴─────────────┴───────────┘
 ```
 
 ## Querying data
@@ -173,22 +180,19 @@ shape: (5, 5)
 Neuralake provides a consistent interface for querying data across all table types:
 
 ```python
-# Basic query
->>> df = db.spikes()
-
 # Filter data
->>> df = db.spikes(filters=[("channel", "=", 1)])
+>>> df = db.supplier(filters=[("s_nationkey", "=", 1)])
 
 # Select columns
->>> df = db.spikes(columns=["timestamp", "value"])
+>>> df = db.supplier(columns=["s_suppkey", "s_name"])
 
 # Complex queries
->>> df = db.spikes(
+>>> df = db.supplier(
 ...     filters=[
-...         ("channel", "=", 1),
-...         ("timestamp", ">=", "2024-01-01"),
+...         ("s_nationkey", "=", 1),
+...         ("s_acctbal", ">=", 1000.00),
 ...     ],
-...     columns=["timestamp", "value"],
+...     columns=["s_suppkey", "s_name", "s_acctbal"],
 ... )
 ```
 
@@ -207,7 +211,7 @@ cache_options = DeltaCacheOptions(
 )
 
 # Use caching
->>> df = db.spikes(cache_options=cache_options)
+>>> df = db.supplier(cache_options=cache_options)
 ```
 
 ### Custom columns
@@ -215,15 +219,15 @@ You can add custom computed columns to tables:
 
 ```python
 # Add a custom column
-spikes = DeltalakeTable(
-    name="spikes",
-    uri="s3://my-bucket/spikes",
+supplier = DeltalakeTable(
+    name="supplier",
+    uri="s3://my-bucket/tpc-h/supplier",
     schema=schema,
     extra_cols=[
-        (pl.col("value") * 1000, "value_mv"),
+        (pl.col("s_acctbal") * 1.1, "s_acctbal_with_tax"),
     ],
 )
 
 # Query with custom column
->>> df = spikes(columns=["timestamp", "value_mv"])
+>>> df = supplier(columns=["s_suppkey", "s_acctbal_with_tax"])
 ```

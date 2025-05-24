@@ -5,14 +5,24 @@
     background-color: #000000;
 }
 
+/* Center iframe and image */
+iframe {
+    display: block;
+    margin: 0 auto;
+    width: 100% !important;
+    height: 600px !important;
+    overflow: auto;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
 /* Hide GitHub-only content in MkDocs */
 .github-only {
     display: none !important;
-}
-
-/* Make GitHub banner background black */
-.github-only img {
-    background-color: #000000;
 }
 
 /* Darker color scheme */
@@ -45,7 +55,7 @@
 
 .md-header__source {
     position: absolute;
-    left: 80rem;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
     padding: 0;
@@ -53,9 +63,23 @@
     z-index: 2;
 }
 
-/* Hide GitHub text */
-.md-header__source .md-source__repository {
-    display: none;
+/* Add responsive styles for GitHub icon */
+@media screen and (max-width: 76.1875em) {
+    .md-header__source {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+@media screen and (max-width: 59.9375em) {
+    .md-header__source {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 }
 
 /* Style GitHub icon */
@@ -63,6 +87,19 @@
     width: 2rem;
     height: 2rem;
     padding: 0.4rem;
+}
+
+/* Hide repository text */
+.md-header__source .md-source__repository {
+    display: none;
+}
+
+.md-header__source {
+    padding: 0.4rem !important;
+}
+
+.md-header__source .md-source__icon {
+    margin: 0;
 }
 
 .md-search {
@@ -134,6 +171,20 @@
 
 .md-search__input::-webkit-input-placeholder {
     content: "Search (⌘K)";
+}
+
+.md-grid {
+    width: 100%; 
+    min-width: 100%;
+  }
+  
+.md-content {
+    width: 80%;
+    min-width: 100%;
+}
+
+.md-sidebar {
+    width: 0;
 }
 
 .md-search__input::-moz-placeholder {

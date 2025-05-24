@@ -12,43 +12,71 @@ pip install neuralake
 
 ### Creating a Table
 
-Neuralake provides several table types for different data sources. Here's how to create a Delta Lake table:
+Neuralake provides several table types for different data sources. Here's how to create Delta Lake and Parquet tables:
 
 ```python
-from neuralake.core import DeltalakeTable, Filter
+from neuralake.core import DeltalakeTable, ParquetTable, Filter
+import pyarrow as pa
 
-# Define a schema
-schema = {
-    "implant_id": "i64",
-    "date": "str",
-    "hour": "i64",
-    "spike_count": "i64"
-}
+# Define schemas
+supplier_schema = pa.schema([
+    ("s_suppkey", pa.int64()),
+    ("s_name", pa.string()),
+    ("s_address", pa.string()),
+    ("s_nationkey", pa.int64()),
+    ("s_phone", pa.string()),
+    ("s_acctbal", pa.decimal128(12, 2)),
+    ("s_comment", pa.string()),
+])
 
-# Create a table
-neural_spikes = DeltalakeTable(
-    name="neural_spikes",
-    uri='s3://my-bucket/neural_spikes',
-    schema=schema,
+partsupp_schema = pa.schema([
+    ("ps_partkey", pa.int64()),
+    ("ps_suppkey", pa.int64()),
+    ("ps_availqty", pa.int32()),
+    ("ps_supplycost", pa.decimal128(12, 2)),
+    ("ps_comment", pa.string()),
+])
+
+# Create a Delta Lake table
+supplier = DeltalakeTable(
+    name="supplier",
+    uri='s3://my-bucket/tpc-h/supplier',
+    schema=supplier_schema,
     docs_filters=[
-        Filter("implant_id", "=", 3770),
-        Filter("date", "=", "2024-08-28"),
+        Filter("s_suppkey", "=", 1),
+        Filter("s_nationkey", "=", 1),
     ],
-    unique_columns=['implant_id'],
-    description="Neural spikes recorded by a Neuralink implant."
+    unique_columns=['s_suppkey'],
+    description="Supplier information from the TPC-H benchmark."
+)
+
+# Create a Parquet table
+partsupp = ParquetTable(
+    name="partsupp",
+    uri='s3://my-bucket/tpc-h/partsupp',
+    schema=partsupp_schema,
+    docs_filters=[
+        Filter("ps_suppkey", "=", 1),
+        Filter("ps_partkey", "=", 1),
+    ],
+    unique_columns=['ps_partkey', 'ps_suppkey'],
+    description="Part supplier relationship information from the TPC-H benchmark."
 )
 ```
 
 ### Creating a Catalog
 
-A catalog is a collection of tables that can be queried together:
+A catalog is a collection of tables:
 
 ```python
 from neuralake.core import Catalog
 
 # Create a catalog
 dbs = {
-    "neural_spikes": neural_spikes,
+    "tpc-h": {
+        "supplier": supplier,
+        "partsupp": partsupp,
+    }
 }
 
 MyCatalog = Catalog(dbs)
@@ -56,21 +84,24 @@ MyCatalog = Catalog(dbs)
 
 ### Querying Data
 
-Once you have a catalog, you can query the data using filters:
-
 ```python
 from neuralake.core import Filter
+import polars as pl
 
-# Query the data
-data = MyCatalog.db("neural_spikes").table(
-    "neural_spikes",
-    (
-        Filter('implant_id', '=', 5555),
-        Filter('date', '=', '2024-09-06'),
-    ),
-).collect()
+# Query and join tables
+joined_data = (
+    MyCatalog.db("tpc-h").table("supplier", Filter('s_suppkey', '=', 1))
+    .join(
+        MyCatalog.db("tpc-h").table("partsupp", Filter('ps_suppkey', '=', 1)),
+        left_on="s_suppkey",
+        right_on="ps_suppkey",
+        how="inner"
+    )
+    .select(["s_suppkey", "s_name", "ps_partkey", "ps_availqty"])
+    .collect()
+)
 
-print(data)
+print(joined_data)
 ```
 
 ### Generating Documentation
