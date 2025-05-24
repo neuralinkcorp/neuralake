@@ -10,23 +10,6 @@
     display: none !important;
 }
 
-/* Show mkdocs-only content in MkDocs */
-.mkdocs-only {
-    display: block !important;
-}
-
-/* Hide mkdocs-only content on GitHub */
-@media screen and (max-width: 76.1875em) {
-    .mkdocs-only {
-        display: none !important;
-    }
-}
-
-/* Make GitHub banner background black */
-.github-only img {
-    background-color: #000000;
-}
-
 /* Darker color scheme */
 .md-main {
     background-color: #1a1a1a;
