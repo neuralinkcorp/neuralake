@@ -1,0 +1,420 @@
+{
+    "catalogs": [
+        {
+            "name": "tcph",
+            "databases": [
+                {
+                    "name": "tpc-h",
+                    "tables": [
+                        {
+                            "name": "part",
+                            "description": "Part table containing information about parts in the TPC-H benchmark. Each part has a unique part key and various attributes like name, manufacturer, brand, type, size, container, retail price, and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "p_partkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "p_partkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "p_name",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "p_mfgr",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "p_brand",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "p_type",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "p_size",
+                                    "type": "Int32"
+                                },
+                                {
+                                    "name": "p_container",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "p_retailprice",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "p_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "PARQUET",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        },
+                        {
+                            "name": "supplier",
+                            "description": "Supplier table containing information about suppliers in the TPC-H benchmark. Each supplier has a unique supplier key and various attributes including name, address, nation key, phone, account balance, and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "s_suppkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "s_suppkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "s_name",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "s_address",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "s_nationkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "s_phone",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "s_acctbal",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "s_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "DELTA_LAKE",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        },
+                        {
+                            "name": "partsupp",
+                            "description": "Part supplier table containing information about parts supplied by suppliers. Each record represents a unique part-supplier relationship with attributes including available quantity, supply cost, and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "ps_partkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                },
+                                {
+                                    "column_name": "ps_suppkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "ps_partkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "ps_suppkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "ps_availqty",
+                                    "type": "Int32"
+                                },
+                                {
+                                    "name": "ps_supplycost",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "ps_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "FUNCTION",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        },
+                        {
+                            "name": "customer",
+                            "description": "Customer table containing information about customers in the TPC-H benchmark. Each customer has a unique customer key and various attributes including name, address, nation key, phone, account balance, market segment, and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "c_custkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "c_custkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "c_name",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "c_address",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "c_nationkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "c_phone",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "c_acctbal",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "c_mktsegment",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "c_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "PARQUET",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        },
+                        {
+                            "name": "orders",
+                            "description": "Orders table containing information about customer orders in the TPC-H benchmark. Each order has a unique order key and various attributes including customer key, order status, total price, order date, priority, clerk, ship priority, and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "o_orderkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "o_orderkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "o_custkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "o_orderstatus",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "o_totalprice",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "o_orderdate",
+                                    "type": "Date32"
+                                },
+                                {
+                                    "name": "o_orderpriority",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "o_clerk",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "o_shippriority",
+                                    "type": "Int32"
+                                },
+                                {
+                                    "name": "o_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "FUNCTION",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        },
+                        {
+                            "name": "lineitem",
+                            "description": "Line item table containing information about individual items in orders. Each line item represents a part ordered by a customer, with attributes including quantity, price, discount, tax, shipping information, and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "l_orderkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                },
+                                {
+                                    "column_name": "l_linenumber",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "l_orderkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "l_partkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "l_suppkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "l_linenumber",
+                                    "type": "Int32"
+                                },
+                                {
+                                    "name": "l_quantity",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "l_extendedprice",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "l_discount",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "l_tax",
+                                    "type": "Decimal(12,2)"
+                                },
+                                {
+                                    "name": "l_returnflag",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "l_linestatus",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "l_shipdate",
+                                    "type": "Date32"
+                                },
+                                {
+                                    "name": "l_commitdate",
+                                    "type": "Date32"
+                                },
+                                {
+                                    "name": "l_receiptdate",
+                                    "type": "Date32"
+                                },
+                                {
+                                    "name": "l_shipinstruct",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "l_shipmode",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "l_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "DELTA_LAKE",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        },
+                        {
+                            "name": "nation",
+                            "description": "Nation table containing information about nations in the TPC-H benchmark. Each nation has a unique nation key and various attributes including name, region key, and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "n_nationkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "n_nationkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "n_name",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "n_regionkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "n_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "FUNCTION",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        },
+                        {
+                            "name": "region",
+                            "description": "Region table containing information about regions in the TPC-H benchmark. Each region has a unique region key and various attributes including name and comments.",
+                            "partitions": [
+                                {
+                                    "column_name": "r_regionkey",
+                                    "type_annotation": "int",
+                                    "value": 1
+                                }
+                            ],
+                            "columns": [
+                                {
+                                    "name": "r_regionkey",
+                                    "type": "Int64"
+                                },
+                                {
+                                    "name": "r_name",
+                                    "type": "String"
+                                },
+                                {
+                                    "name": "r_comment",
+                                    "type": "String"
+                                }
+                            ],
+                            "selected_columns": null,
+                            "supports_sql_filter": false,
+                            "table_type": "PARQUET",
+                            "latency_info": "Static data loaded from TPC-H benchmark",
+                            "example_notebook": null,
+                            "data_input": "TPC-H benchmark data"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
