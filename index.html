@@ -250,26 +250,6 @@
   
 
       
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="catalog/" class="md-tabs__link">
-          
-  
-  
-  Examples
-
-        </a>
-      </li>
-    
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -382,79 +362,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    Examples
-    
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            Examples
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="catalog/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Catalog
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -526,36 +433,67 @@
 <h3 id="create-a-table-and-catalog">Create a table and catalog<a class="headerlink" href="#create-a-table-and-catalog" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DeltalakeTable</span><span class="p">,</span>
+    <span class="n">ParquetTable</span><span class="p">,</span>
     <span class="n">Filter</span><span class="p">,</span>
     <span class="n">Catalog</span>
 <span class="p">)</span>
 
-<span class="c1"># Define a table</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
-    <span class="p">(</span><span class="s2">&quot;implant_id&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">date64</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int8</span><span class="p">()),</span>
-<span class="p">])</span>
-
-<span class="n">neural_spikes</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;my_table&quot;</span><span class="p">,</span>
-    <span class="n">uri</span><span class="o">=</span><span class="s1">&#39;s3://my-bucket/neural_spikes&#39;</span><span class="p">,</span>
-    <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span>
-    <span class="c1"># Example filters for auto-generated docs</span>
+<span class="c1"># Define tables</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">ParquetTable</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;customer&quot;</span><span class="p">,</span>
+    <span class="n">uri</span><span class="o">=</span><span class="s1">&#39;s3://my-bucket/tpc-h/customer&#39;</span><span class="p">,</span>
+    <span class="n">schema</span><span class="o">=</span><span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
+        <span class="p">(</span><span class="s2">&quot;c_custkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;c_name&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;c_address&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;c_nationkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;c_phone&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;c_acctbal&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">decimal128</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;c_mktsegment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;c_comment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">]),</span>
     <span class="n">docs_filters</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;implant_id&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">3770</span><span class="p">),</span>
-        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-08-28&quot;</span><span class="p">),</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;c_custkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;c_mktsegment&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;BUILDING&quot;</span><span class="p">),</span>
     <span class="p">],</span>
-    <span class="n">unique_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;implant_id&#39;</span><span class="p">],</span>
+    <span class="n">unique_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;c_custkey&#39;</span><span class="p">],</span>
     <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    Neural spikes recorded by a Neuralink implant.</span>
-<span class="s2">    This data is published every 10 seconds to a Delta Lake table.</span>
+<span class="s2">    Customer information from the TPC-H benchmark.</span>
+<span class="s2">    Contains customer details including name, address, and market segment.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">orders</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;orders&quot;</span><span class="p">,</span>
+    <span class="n">uri</span><span class="o">=</span><span class="s1">&#39;s3://my-bucket/tpc-h/orders&#39;</span><span class="p">,</span>
+    <span class="n">schema</span><span class="o">=</span><span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
+        <span class="p">(</span><span class="s2">&quot;o_orderkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;o_custkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;o_orderstatus&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;o_totalprice&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">decimal128</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;o_orderdate&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">date32</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;o_orderpriority&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;o_clerk&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;o_shippriority&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s2">&quot;o_comment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">]),</span>
+    <span class="n">docs_filters</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;o_custkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;o_orderdate&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">unique_columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;o_orderkey&#39;</span><span class="p">],</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Order information from the TPC-H benchmark.</span>
+<span class="s2">    Contains order details including status, total price, and order date.</span>
 <span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Create a catalog</span>
 <span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;neural_spikes&quot;</span><span class="p">:</span> <span class="n">neural_spikes</span><span class="p">,</span>
+    <span class="s2">&quot;tpc-h&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;customer&quot;</span><span class="p">:</span> <span class="n">customers</span><span class="p">,</span>
+        <span class="s2">&quot;orders&quot;</span><span class="p">:</span> <span class="n">orders</span><span class="p">,</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="n">MyCatalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="p">(</span><span class="n">dbs</span><span class="p">)</span>
@@ -564,26 +502,45 @@
 <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">my_catalogs</span><span class="w"> </span><span class="kn">import</span> <span class="n">MyCatalog</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
 <span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="n">data</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;neural_spikes&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
-<span class="o">...</span>     <span class="s2">&quot;my_table&quot;</span><span class="p">,</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get customer information</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">customer_data</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+<span class="o">...</span>     <span class="s2">&quot;customer&quot;</span><span class="p">,</span>
 <span class="o">...</span>     <span class="p">(</span>
-<span class="o">...</span>         <span class="n">Filter</span><span class="p">(</span><span class="s1">&#39;implant_id&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">5555</span><span class="p">),</span>
-<span class="o">...</span>         <span class="n">Filter</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;2024-09-06&#39;</span><span class="p">),</span>
+<span class="o">...</span>         <span class="n">Filter</span><span class="p">(</span><span class="s1">&#39;c_custkey&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="o">...</span>         <span class="n">Filter</span><span class="p">(</span><span class="s1">&#39;c_mktsegment&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;BUILDING&#39;</span><span class="p">),</span>
 <span class="o">...</span>     <span class="p">),</span>
 <span class="o">...</span> <span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> 
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
-<span class="err">┌────────────┬────────────┬──────┐</span>
-<span class="err">│</span> <span class="n">implant_id</span> <span class="err">┆</span> <span class="n">date</span>       <span class="err">┆</span> <span class="n">hour</span> <span class="err">│</span>
-<span class="err">│</span> <span class="o">---</span>        <span class="err">┆</span> <span class="o">---</span>        <span class="err">┆</span> <span class="o">---</span>  <span class="err">│</span>
-<span class="err">│</span> <span class="n">i64</span>        <span class="err">┆</span> <span class="nb">str</span>        <span class="err">┆</span> <span class="n">i64</span>  <span class="err">│</span>
-<span class="err">╞════════════╪════════════╪══════╡</span>
-<span class="err">│</span> <span class="mi">5555</span>       <span class="err">┆</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">06</span> <span class="err">┆</span> <span class="mi">7</span>    <span class="err">│</span>
-<span class="err">│</span> <span class="mi">5555</span>       <span class="err">┆</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">06</span> <span class="err">┆</span> <span class="mi">7</span>    <span class="err">│</span>
-<span class="err">│</span> <span class="err">…</span>          <span class="err">┆</span> <span class="err">…</span>          <span class="err">┆</span> <span class="err">…</span>    <span class="err">│</span>
-<span class="err">│</span> <span class="mi">5555</span>       <span class="err">┆</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="mi">06</span> <span class="err">┆</span> <span class="mi">6</span>    <span class="err">│</span>
-<span class="err">└────────────┴────────────┴──────┘</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get their orders</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">order_data</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+<span class="o">...</span>     <span class="s2">&quot;orders&quot;</span><span class="p">,</span>
+<span class="o">...</span>     <span class="p">(</span>
+<span class="o">...</span>         <span class="n">Filter</span><span class="p">(</span><span class="s1">&#39;o_custkey&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="o">...</span>         <span class="n">Filter</span><span class="p">(</span><span class="s1">&#39;o_orderdate&#39;</span><span class="p">,</span> <span class="s1">&#39;&gt;=&#39;</span><span class="p">,</span> <span class="s1">&#39;2024-01-01&#39;</span><span class="p">),</span>
+<span class="o">...</span>     <span class="p">),</span>
+<span class="o">...</span> <span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> 
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">customer_data</span><span class="p">)</span>
+<span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="err">┌───────────┬────────────┬────────────┬────────────┬───────────┬────────────┬────────────┬────────────┐</span>
+<span class="err">│</span> <span class="n">c_custkey</span> <span class="err">│</span> <span class="n">c_name</span>     <span class="err">│</span> <span class="n">c_address</span>  <span class="err">│</span> <span class="n">c_nationkey</span><span class="err">│</span> <span class="n">c_phone</span>   <span class="err">│</span> <span class="n">c_acctbal</span>  <span class="err">│</span> <span class="n">c_mktsegment</span><span class="err">│</span> <span class="n">c_comment</span> <span class="err">│</span>
+<span class="err">│</span> <span class="o">---</span>       <span class="err">│</span> <span class="o">---</span>        <span class="err">│</span> <span class="o">---</span>        <span class="err">│</span> <span class="o">---</span>        <span class="err">│</span> <span class="o">---</span>       <span class="err">│</span> <span class="o">---</span>        <span class="err">│</span> <span class="o">---</span>        <span class="err">│</span> <span class="o">---</span>        <span class="err">│</span>
+<span class="err">│</span> <span class="n">i64</span>       <span class="err">│</span> <span class="nb">str</span>        <span class="err">│</span> <span class="nb">str</span>        <span class="err">│</span> <span class="n">i64</span>        <span class="err">│</span> <span class="nb">str</span>       <span class="err">│</span> <span class="n">dec</span>        <span class="err">│</span> <span class="nb">str</span>        <span class="err">│</span> <span class="nb">str</span>        <span class="err">│</span>
+<span class="err">╞═══════════╪════════════╪════════════╪════════════╪═══════════╪════════════╪════════════╪════════════╡</span>
+<span class="err">│</span> <span class="mi">1</span>         <span class="err">│</span> <span class="n">Customer</span><span class="c1">#1 │ Address 1  │ 1          │ 123-456   │ 1000.00    │ BUILDING   │ Comment 1  |</span>
+<span class="err">└───────────┴────────────┴────────────┴────────────┴───────────┴────────────┴────────────┴────────────┘</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">order_data</span><span class="p">)</span>
+<span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="err">┌───────────┬───────────┬──────────────┬─────────────┬────────────┬─────────────────┬───────────┬─────────────────┬───────────┐</span>
+<span class="err">│</span> <span class="n">o_orderkey</span><span class="err">│</span> <span class="n">o_custkey</span> <span class="err">│</span> <span class="n">o_orderstatus</span><span class="err">│</span> <span class="n">o_totalprice</span><span class="err">│</span> <span class="n">o_orderdate</span><span class="err">│</span> <span class="n">o_orderpriority</span> <span class="err">│</span> <span class="n">o_clerk</span>   <span class="err">│</span> <span class="n">o_shippriority</span>  <span class="err">│</span> <span class="n">o_comment</span> <span class="err">│</span>
+<span class="err">│</span> <span class="o">---</span>       <span class="err">│</span> <span class="o">---</span>       <span class="err">│</span> <span class="o">---</span>          <span class="err">│</span> <span class="o">---</span>         <span class="err">│</span> <span class="o">---</span>        <span class="err">│</span> <span class="o">---</span>             <span class="err">│</span> <span class="o">---</span>       <span class="err">│</span> <span class="o">---</span>             <span class="err">│</span> <span class="o">---</span>       <span class="err">│</span>
+<span class="err">│</span> <span class="n">i64</span>       <span class="err">│</span> <span class="n">i64</span>       <span class="err">│</span> <span class="nb">str</span>          <span class="err">│</span> <span class="n">dec</span>         <span class="err">│</span> <span class="n">date</span>       <span class="err">│</span> <span class="nb">str</span>             <span class="err">│</span> <span class="nb">str</span>       <span class="err">│</span> <span class="n">i32</span>             <span class="err">│</span> <span class="nb">str</span>       <span class="err">│</span>
+<span class="err">╞═══════════╪═══════════╪══════════════╪═════════════╪════════════╪═════════════════╪═══════════╪═════════════════╪═══════════╡</span>
+<span class="err">│</span> <span class="mi">1</span>         <span class="err">│</span> <span class="err">…</span>         <span class="err">│</span> <span class="err">…</span>            <span class="err">│</span> <span class="mf">1000.00</span>     <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mi">5</span><span class="o">-</span><span class="n">LOW</span>           <span class="err">│</span> <span class="n">Clerk</span><span class="c1">#1   │ 0               │ Order 1   │</span>
+<span class="err">│</span> <span class="mi">2</span>         <span class="err">│</span> <span class="err">…</span>         <span class="err">│</span> <span class="err">…</span>            <span class="err">│</span> <span class="mf">2000.00</span>     <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">02</span> <span class="err">│</span> <span class="mi">4</span><span class="o">-</span><span class="n">NOT</span> <span class="n">SPEC</span>      <span class="err">│</span> <span class="n">Clerk</span><span class="c1">#2   │ 0               │ Order 2   │</span>
+<span class="err">│</span> <span class="mi">3</span>         <span class="err">│</span> <span class="err">…</span>         <span class="err">│</span> <span class="err">…</span>            <span class="err">│</span> <span class="mf">3000.00</span>     <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">03</span> <span class="err">│</span> <span class="mi">3</span><span class="o">-</span><span class="n">MEDIUM</span>        <span class="err">│</span> <span class="n">Clerk</span><span class="c1">#3   │ 0               │ Order 3   │</span>
+<span class="err">└───────────┴───────────┴──────────────┴─────────────┴────────────┴─────────────────┴───────────┴─────────────────┴───────────┘</span>
 </code></pre></div>
 <h2 id="about-neuralink">About Neuralink<a class="headerlink" href="#about-neuralink" title="Permanent link">&para;</a></h2>
 <p>Neuralake is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology. </p>
