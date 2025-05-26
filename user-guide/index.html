@@ -573,42 +573,48 @@
 <h3 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h3>
 <p>A table in Neuralake is a Python function that returns an <code>NlkDataFrame</code>. An <code>NlkDataFrame</code> is a thin wrapper of the <a href="https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html">polars LazyFrame</a>. Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by <a href="https://delta.io/">DeltaLake</a> tables, <a href="https://parquet.apache.org/">Parquet tables</a>, or pure Python functions.</p>
 <h4 id="deltalake-tables">DeltaLake tables<a class="headerlink" href="#deltalake-tables" title="Permanent link">&para;</a></h4>
-<p>DeltaLake tables provide efficient access to DeltaLake tables:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeltalakeTable</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
 
 <span class="c1"># Define the schema</span>
 <span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
-    <span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">timestamp</span><span class="p">(</span><span class="s2">&quot;ns&quot;</span><span class="p">)),</span>
-    <span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">float64</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;s_name&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;s_address&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;s_nationkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;s_phone&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;s_acctbal&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">decimal128</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s2">&quot;s_comment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
 <span class="p">])</span>
 
 <span class="c1"># Create the table</span>
-<span class="n">spikes</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;spikes&quot;</span><span class="p">,</span>
-    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/spikes&quot;</span><span class="p">,</span>
+<span class="n">supplier</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;supplier&quot;</span><span class="p">,</span>
+    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/tpc-h/supplier/&quot;</span><span class="p">,</span>
     <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Neural spike data&quot;</span><span class="p">,</span>
-    <span class="n">unique_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Supplier information from the TPC-H benchmark&quot;</span><span class="p">,</span>
+    <span class="n">unique_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 </code></pre></div>
 <h4 id="parquet-tables">Parquet tables<a class="headerlink" href="#parquet-tables" title="Permanent link">&para;</a></h4>
-<p>Allow for querying parquet data:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParquetTable</span><span class="p">,</span> <span class="n">Partition</span><span class="p">,</span> <span class="n">PartitioningScheme</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
 
-<span class="c1"># Define partitions</span>
-<span class="n">partitions</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">Partition</span><span class="p">(</span><span class="s2">&quot;date&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
-    <span class="n">Partition</span><span class="p">(</span><span class="s2">&quot;subject_id&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">),</span>
-<span class="p">]</span>
+<span class="c1"># Define the schema</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">&quot;ps_partkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;ps_availqty&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;ps_supplycost&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">decimal128</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s2">&quot;ps_comment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+<span class="p">])</span>
 
 <span class="c1"># Create the table</span>
-<span class="n">spikes</span> <span class="o">=</span> <span class="n">ParquetTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;spikes&quot;</span><span class="p">,</span>
-    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/spikes&quot;</span><span class="p">,</span>
-    <span class="n">partitioning</span><span class="o">=</span><span class="n">partitions</span><span class="p">,</span>
-    <span class="n">partitioning_scheme</span><span class="o">=</span><span class="n">PartitioningScheme</span><span class="o">.</span><span class="n">HIVE</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Neural spike data&quot;</span><span class="p">,</span>
+<span class="n">partsupp</span> <span class="o">=</span> <span class="n">ParquetTable</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;partsupp&quot;</span><span class="p">,</span>
+    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/tpc-h/partsupp&quot;</span><span class="p">,</span>
+    <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Part supplier relationship information from the TPC-H benchmark&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
 <h4 id="function-tables">Function tables<a class="headerlink" href="#function-tables" title="Permanent link">&para;</a></h4>
@@ -617,13 +623,16 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
 
 <span class="nd">@table</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">my_custom_table</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NlkDataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom table that returns data from any source.&quot;&quot;&quot;</span>
-    <span class="c1"># Create a sample dataframe with neural spike data</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">supplier_sample</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NlkDataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom table that returns sample supplier data.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.123</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.789</span><span class="p">,</span> <span class="mf">0.321</span><span class="p">,</span> <span class="mf">0.654</span><span class="p">],</span>
-        <span class="s2">&quot;channel&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+        <span class="s2">&quot;s_suppkey&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+        <span class="s2">&quot;s_name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Supplier#1&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#2&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#3&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#4&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#5&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;s_address&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;123 Main St&quot;</span><span class="p">,</span> <span class="s2">&quot;456 Oak Ave&quot;</span><span class="p">,</span> <span class="s2">&quot;789 Pine Rd&quot;</span><span class="p">,</span> <span class="s2">&quot;321 Elm St&quot;</span><span class="p">,</span> <span class="s2">&quot;654 Maple Dr&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;s_nationkey&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+        <span class="s2">&quot;s_phone&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;555-0001&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0002&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0003&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0004&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0005&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;s_acctbal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1000.00</span><span class="p">,</span> <span class="mf">2000.00</span><span class="p">,</span> <span class="mf">3000.00</span><span class="p">,</span> <span class="mf">4000.00</span><span class="p">,</span> <span class="mf">5000.00</span><span class="p">],</span>
+        <span class="s2">&quot;s_comment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Comment 1&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 2&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 3&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 4&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 5&quot;</span><span class="p">]</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">NlkDataFrame</span><span class="p">(</span><span class="n">frame</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">LazyFrame</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 </code></pre></div>
@@ -635,13 +644,13 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span>
 
 <span class="nd">@table</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">spikes</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Neural spike data.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">supplier</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Supplier information.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">NlkDataFrame</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 
 <span class="nd">@table</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">events</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Behavioral events.&quot;&quot;&quot;</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">partsupp</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Part supplier relationship information.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">NlkDataFrame</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 
 <span class="c1"># Using the database</span>
@@ -651,18 +660,18 @@
 <span class="n">db</span> <span class="o">=</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">my_database</span><span class="p">)</span>
 
 <span class="c1"># Query data</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">spikes</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">supplier</span><span class="p">()</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-<span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-<span class="err">┌────────────┬─────────┬─────────┐</span>
-<span class="err">│</span> <span class="n">timestamp</span>  <span class="err">│</span> <span class="n">value</span>   <span class="err">│</span> <span class="n">channel</span> <span class="err">│</span>
-<span class="err">├────────────┼─────────┼─────────┤</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.123</span>   <span class="err">│</span> <span class="mi">1</span>       <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.456</span>   <span class="err">│</span> <span class="mi">2</span>       <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.789</span>   <span class="err">│</span> <span class="mi">3</span>       <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.321</span>   <span class="err">│</span> <span class="mi">4</span>       <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.654</span>   <span class="err">│</span> <span class="mi">5</span>       <span class="err">│</span>
-<span class="err">└────────────┴─────────┴─────────┘</span>
+<span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="err">┌──────────┬───────────┬────────────┬────────────┬──────────┬──────────┬──────────┐</span>
+<span class="err">│</span> <span class="n">s_suppkey</span><span class="err">│</span> <span class="n">s_name</span>    <span class="err">│</span> <span class="n">s_address</span>  <span class="err">│</span> <span class="n">s_nationkey</span><span class="err">│</span> <span class="n">s_phone</span>  <span class="err">│</span> <span class="n">s_acctbal</span><span class="err">│</span> <span class="n">s_comment</span><span class="err">│</span>
+<span class="err">├──────────┼───────────┼────────────┼────────────┼──────────┼──────────┼──────────┤</span>
+<span class="err">│</span> <span class="mi">1</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#1│ 123 Main St│ 1          │ 555-0001 │ 1000.00  │ Comment 1│</span>
+<span class="err">│</span> <span class="mi">2</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#2│ 456 Oak Ave│ 1          │ 555-0002 │ 2000.00  │ Comment 2│</span>
+<span class="err">│</span> <span class="mi">3</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#3│ 789 Pine Rd│ 2          │ 555-0003 │ 3000.00  │ Comment 3│</span>
+<span class="err">│</span> <span class="mi">4</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#4│ 321 Elm St │ 2          │ 555-0004 │ 4000.00  │ Comment 4│</span>
+<span class="err">│</span> <span class="mi">5</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#5│ 654 Maple Dr│ 3         │ 555-0005 │ 5000.00  │ Comment 5│</span>
+<span class="err">└──────────┴───────────┴────────────┴────────────┴──────────┴──────────┴──────────┘</span>
 </code></pre></div>
 <h4 id="custom-database">Custom database<a class="headerlink" href="#custom-database" title="Permanent link">&para;</a></h4>
 <p>You can also create custom databases by implementing the <code>Database</code> protocol:</p>
@@ -671,8 +680,8 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">MyDatabase</span><span class="p">(</span><span class="n">Database</span><span class="p">):</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tables</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;spikes&quot;</span><span class="p">:</span> <span class="n">DeltalakeTable</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
-            <span class="s2">&quot;events&quot;</span><span class="p">:</span> <span class="n">ParquetTable</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+            <span class="s2">&quot;supplier&quot;</span><span class="p">:</span> <span class="n">DeltalakeTable</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+            <span class="s2">&quot;partsupp&quot;</span><span class="p">:</span> <span class="n">ParquetTable</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
         <span class="p">}</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">get_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_deprecated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TableProtocol</span><span class="p">]:</span>
@@ -682,55 +691,52 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tables</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="catalogs">Catalogs<a class="headerlink" href="#catalogs" title="Permanent link">&para;</a></h3>
-<p>A catalog in Neuralake is a Python module that is a collection of databases. It provides a unified interface to access data across multiple databases:</p>
+<p>A catalog is a Python module that is a collection of databases.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">ModuleDatabase</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">neural_spikes</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">behavioral_data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">supplier_data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">partsupp_data</span>
 
 <span class="c1"># Create a catalog</span>
 <span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;neural_spikes&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">neural_spikes</span><span class="p">),</span>
-    <span class="s2">&quot;behavioral_data&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">behavioral_data</span><span class="p">),</span>
+    <span class="s2">&quot;supplier_data&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">supplier_data</span><span class="p">),</span>
+    <span class="s2">&quot;partsupp_data&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">partsupp_data</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="n">MyCatalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="p">(</span><span class="n">dbs</span><span class="p">)</span>
 
 <span class="c1"># Query data across databases</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">spikes</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;neural_spikes&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spikes</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">events</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;behavioral_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">supplier</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;supplier_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">supplier</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">partsupp</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;partsupp_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">partsupp</span><span class="p">()</span>
 
 <span class="c1"># Join data across databases</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">joined</span> <span class="o">=</span> <span class="n">spikes</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">events</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">joined</span> <span class="o">=</span> <span class="n">supplier</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">partsupp</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">joined</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
-<span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="err">┌────────────┬─────────┬─────────┬─────────┬────────────┐</span>
-<span class="err">│</span> <span class="n">timestamp</span>  <span class="err">│</span> <span class="n">value</span>   <span class="err">│</span> <span class="n">channel</span> <span class="err">│</span> <span class="n">event</span>   <span class="err">│</span> <span class="n">event_time</span> <span class="err">│</span>
-<span class="err">├────────────┼─────────┼─────────┼─────────┼────────────┤</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.123</span>   <span class="err">│</span> <span class="mi">1</span>       <span class="err">│</span> <span class="n">start</span>   <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.456</span>   <span class="err">│</span> <span class="mi">2</span>       <span class="err">│</span> <span class="n">start</span>   <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.789</span>   <span class="err">│</span> <span class="mi">3</span>       <span class="err">│</span> <span class="n">stop</span>    <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.321</span>   <span class="err">│</span> <span class="mi">4</span>       <span class="err">│</span> <span class="n">stop</span>    <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span>
-<span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span> <span class="mf">0.654</span>   <span class="err">│</span> <span class="mi">5</span>       <span class="err">│</span> <span class="n">start</span>   <span class="err">│</span> <span class="mi">2024</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="mi">01</span> <span class="err">│</span>
-<span class="err">└────────────┴─────────┴─────────┴─────────┴────────────┘</span>
+<span class="n">shape</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="err">┌──────────┬───────────┬────────────┬────────────┬──────────┬──────────┬──────────┬──────────┬──────────┬────────────┬─────────────┬──────────</span> <span class="err">┐</span>
+<span class="err">│</span> <span class="n">s_suppkey</span><span class="err">│</span> <span class="n">s_name</span>    <span class="err">│</span> <span class="n">s_address</span>  <span class="err">│</span> <span class="n">s_nationkey</span><span class="err">│</span> <span class="n">s_phone</span>  <span class="err">│</span> <span class="n">s_acctbal</span><span class="err">│</span> <span class="n">s_comment</span><span class="err">│</span><span class="n">ps_partkey</span><span class="err">│</span><span class="n">ps_suppkey</span><span class="err">│</span><span class="n">ps_availqty</span> <span class="err">│</span><span class="n">ps_supplycost</span><span class="err">│</span><span class="n">ps_comment</span> <span class="err">│</span>
+<span class="err">├──────────┼───────────┼────────────┼────────────┼──────────┼──────────┼──────────┼──────────┼──────────┼────────────┼─────────────┼───────────┤</span>
+<span class="err">│</span> <span class="mi">1</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#1│ 123 Main St│ 1          │ 555-0001 │ 1000.00  │ Comment 1│ 1        │ 1        │ 100        │ 100.00      │ Part 1    │</span>
+<span class="err">│</span> <span class="mi">2</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#2│ 456 Oak Ave│ 1          │ 555-0002 │ 2000.00  │ Comment 2│ 2        │ 2        │ 200        │ 200.00      │ Part 2    │</span>
+<span class="err">│</span> <span class="mi">3</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#3│ 789 Pine Rd│ 2          │ 555-0003 │ 3000.00  │ Comment 3│ 3        │ 3        │ 300        │ 300.00      │ Part 3    │</span>
+<span class="err">│</span> <span class="mi">4</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#4│ 321 Elm St │ 2          │ 555-0004 │ 4000.00  │ Comment 4│ 4        │ 4        │ 400        │ 400.00      │ Part 4    │</span>
+<span class="err">│</span> <span class="mi">5</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#5│ 654 Maple D│  3         │ 555-0005 │ 5000.00  │ Comment 5│ 5        │ 5        │ 500        │ 500.00      │ Part 5    │</span>
+<span class="err">└──────────┴───────────┴────────────┴────────────┴──────────┴──────────┴──────────┴──────────┴──────────┴────────────┴─────────────┴───────────┘</span>
 </code></pre></div>
 <h2 id="querying-data">Querying data<a class="headerlink" href="#querying-data" title="Permanent link">&para;</a></h2>
 <p>Neuralake provides a consistent interface for querying data across all table types:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Basic query</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">spikes</span><span class="p">()</span>
-
-<span class="c1"># Filter data</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">spikes</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;channel&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># Filter data</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">supplier</span><span class="p">(</span><span class="n">filters</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;s_nationkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
 
 <span class="c1"># Select columns</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">spikes</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">supplier</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">,</span> <span class="s2">&quot;s_name&quot;</span><span class="p">])</span>
 
 <span class="c1"># Complex queries</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">spikes</span><span class="p">(</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">supplier</span><span class="p">(</span>
 <span class="o">...</span>     <span class="n">filters</span><span class="o">=</span><span class="p">[</span>
-<span class="o">...</span>         <span class="p">(</span><span class="s2">&quot;channel&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-<span class="o">...</span>         <span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">),</span>
+<span class="o">...</span>         <span class="p">(</span><span class="s2">&quot;s_nationkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+<span class="o">...</span>         <span class="p">(</span><span class="s2">&quot;s_acctbal&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;=&quot;</span><span class="p">,</span> <span class="mf">1000.00</span><span class="p">),</span>
 <span class="o">...</span>     <span class="p">],</span>
-<span class="o">...</span>     <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">],</span>
+<span class="o">...</span>     <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">,</span> <span class="s2">&quot;s_name&quot;</span><span class="p">,</span> <span class="s2">&quot;s_acctbal&quot;</span><span class="p">],</span>
 <span class="o">...</span> <span class="p">)</span>
 </code></pre></div>
 <h2 id="advanced-features">Advanced features<a class="headerlink" href="#advanced-features" title="Permanent link">&para;</a></h2>
@@ -745,22 +751,22 @@
 <span class="p">)</span>
 
 <span class="c1"># Use caching</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">spikes</span><span class="p">(</span><span class="n">cache_options</span><span class="o">=</span><span class="n">cache_options</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">supplier</span><span class="p">(</span><span class="n">cache_options</span><span class="o">=</span><span class="n">cache_options</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="custom-columns">Custom columns<a class="headerlink" href="#custom-columns" title="Permanent link">&para;</a></h3>
 <p>You can add custom computed columns to tables:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># Add a custom column</span>
-<span class="n">spikes</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;spikes&quot;</span><span class="p">,</span>
-    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/spikes&quot;</span><span class="p">,</span>
+<span class="n">supplier</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;supplier&quot;</span><span class="p">,</span>
+    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/tpc-h/supplier&quot;</span><span class="p">,</span>
     <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span>
     <span class="n">extra_cols</span><span class="o">=</span><span class="p">[</span>
-        <span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;value&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="s2">&quot;value_mv&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">pl</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;s_acctbal&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.1</span><span class="p">,</span> <span class="s2">&quot;s_acctbal_with_tax&quot;</span><span class="p">),</span>
     <span class="p">],</span>
 <span class="p">)</span>
 
 <span class="c1"># Query with custom column</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">spikes</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span> <span class="s2">&quot;value_mv&quot;</span><span class="p">])</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">supplier</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">,</span> <span class="s2">&quot;s_acctbal_with_tax&quot;</span><span class="p">])</span>
 </code></pre></div>
 
 

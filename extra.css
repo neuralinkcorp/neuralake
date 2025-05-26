@@ -55,7 +55,7 @@ img {
 
 .md-header__source {
     position: absolute;
-    left: 80rem;
+    right: 1rem;
     top: 50%;
     transform: translateY(-50%);
     padding: 0;
@@ -63,12 +63,43 @@ img {
     z-index: 2;
 }
 
+/* Add responsive styles for GitHub icon */
+@media screen and (max-width: 76.1875em) {
+    .md-header__source {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+@media screen and (max-width: 59.9375em) {
+    .md-header__source {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
 
 /* Style GitHub icon */
 .md-header__source .md-source__icon {
     width: 2rem;
     height: 2rem;
     padding: 0.4rem;
+}
+
+/* Hide repository text */
+.md-header__source .md-source__repository {
+    display: none;
+}
+
+.md-header__source {
+    padding: 0.4rem !important;
+}
+
+.md-header__source .md-source__icon {
+    margin: 0;
 }
 
 .md-search {
