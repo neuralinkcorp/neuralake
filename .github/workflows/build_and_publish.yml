@@ -3,7 +3,7 @@ name: Test, Build and Publish neuralake
 on:
   push:
     branches:
-      - gautham/web-client
+      - gautham/integrate-node
   release:
     types: [created]
   workflow_dispatch:  # Allows manual triggering
@@ -162,9 +162,11 @@ jobs:
       
       - name: Build web catalog
         run: |
-          cd web_catalog
-          npm install --legacy-peer-deps
-          node cli.js -f ../docs/examples/data.json -o ../docs/examples/web_catalog 
+          cd client
+          pip install -e ".[dev]"
+          cd ../docs/examples/
+          mkdir web_catalog
+          python generate_tcph_site.py --output-dir web_catalog
 
       - name: Build documentation
         run: |

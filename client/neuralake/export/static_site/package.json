@@ -6,9 +6,6 @@
     "type": "git",
     "url": "https://gitlab.com/neuralake/catalog.git"
   },
-  "publishConfig": {
-    "registry": "https://git.int.n7k.io/api/v4/projects/27/packages/npm"
-  },
   "bin": {
     "neuralake-catalog": "./cli.js"
   },

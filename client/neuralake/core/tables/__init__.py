@@ -3,7 +3,7 @@ from neuralake.core.tables.deltalake_table import (
     DeltaCacheOptions,
     DeltalakeTable,
 )
-from neuralake.core.tables.metadata import TableMetadata, TableProtocol
+from neuralake.core.tables.metadata import TableMetadata, TableProtocol, TableSchema
 from neuralake.core.tables.parquet_table import ParquetTable
 from neuralake.core.tables.util import (
     DeltaRoapiOptions,
@@ -23,6 +23,7 @@ __all__ = [
     "table",
     "TableMetadata",
     "TableProtocol",
+    "TableSchema",
     "DeltaRoapiOptions",
     "RoapiOptions",
 ]

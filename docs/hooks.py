@@ -13,6 +13,6 @@ def on_page_markdown(markdown, page, config, files):
     <br><br>
 </div>
     """
-    if page.file.src_path == 'README.md':
-        markdown = markdown.replace('<!-- mkdocs:iframe -->', iframe_str)
+    if page.file.src_path == "README.md":
+        markdown = markdown.replace("<!-- mkdocs:iframe -->", iframe_str)
     return markdown

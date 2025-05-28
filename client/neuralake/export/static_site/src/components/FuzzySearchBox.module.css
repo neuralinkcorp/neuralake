@@ -1,0 +1,32 @@
+.item {
+  font-size: var(--font-size-2);
+  line-height: var(--line-height-2);
+  letter-spacing: var(--letter-spacing-2);
+
+  padding: 0 var(--space-2);
+  height: var(--space-6);
+  border-radius: max(var(--radius-2), var(--radius-full));
+
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  color: var(--gray-a11);
+
+  & .highlightedRange {
+    font-weight: var(--font-weight-medium);
+    color: var(--accent-a11);
+  }
+
+  &:hover {
+    background-color: var(--gray-a3);
+  }
+
+  &.active {
+    background-color: var(--accent-a5);
+    color: var(--accent-a12);
+
+    & .highlightedRange {
+      color: var(--accent-a12);
+    }
+  }
+}

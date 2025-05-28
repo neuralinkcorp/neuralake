@@ -6,52 +6,73 @@
 
 A table in Neuralake is a Python function that returns an `NlkDataFrame`. An `NlkDataFrame` is a thin wrapper of the [polars LazyFrame](https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html). Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by [DeltaLake](https://delta.io/) tables, [Parquet tables](https://parquet.apache.org/), or pure Python functions.
 
-#### DeltaLake tables
+#### Delta Lake tables
 ```python
-from neuralake.core.tables import DeltalakeTable
+from neuralake.core import DeltalakeTable
 import pyarrow as pa
 
 # Define the schema
 schema = pa.schema([
-    ("s_suppkey", pa.int64()),
-    ("s_name", pa.string()),
-    ("s_address", pa.string()),
-    ("s_nationkey", pa.int64()),
-    ("s_phone", pa.string()),
-    ("s_acctbal", pa.decimal128(12, 2)),
-    ("s_comment", pa.string()),
+    ("p_partkey", pa.int64()),
+    ("p_name", pa.string()),
+    ("p_mfgr", pa.string()),
+    ("p_brand", pa.string()),
+    ("p_type", pa.string()),
+    ("p_size", pa.int32()),
+    ("p_container", pa.string()),
+    ("p_retailprice", pa.decimal128(12, 2)),
+    ("p_comment", pa.string()),
 ])
 
 # Create the table
-supplier = DeltalakeTable(
-    name="supplier",
-    uri="s3://my-bucket/tpc-h/supplier/",
+part = DeltalakeTable(
+    name="part",
+    uri="s3://my-bucket/tpc-h/part",
     schema=schema,
-    description="Supplier information from the TPC-H benchmark",
-    unique_columns=["s_suppkey"],
+    docs_filters=[
+        Filter("p_partkey", "=", 1),
+        Filter("p_brand", "=", "Brand#1"),
+    ],
+    unique_columns=["p_partkey"],
+    description="""
+    Part information from the TPC-H benchmark.
+    Contains details about parts including name, manufacturer, brand, and retail price.
+    """,
+    table_metadata_args={
+        "data_input": "Part catalog data from manufacturing systems, updated daily",
+        "latency_info": "Daily batch updates from manufacturing ERP system",
+        "example_notebook": "https://example.com/notebooks/part_analysis.ipynb",
+    },
 )
 ```
 
 #### Parquet tables
 ```python
-from neuralake.core.tables import ParquetTable, Partition, PartitioningScheme
+from neuralake.core import ParquetTable, Partition, PartitioningScheme
 import pyarrow as pa
-
-# Define the schema
-schema = pa.schema([
-    ("ps_partkey", pa.int64()),
-    ("ps_suppkey", pa.int64()),
-    ("ps_availqty", pa.int32()),
-    ("ps_supplycost", pa.decimal128(12, 2)),
-    ("ps_comment", pa.string()),
-])
 
 # Create the table
 partsupp = ParquetTable(
     name="partsupp",
     uri="s3://my-bucket/tpc-h/partsupp",
-    schema=schema,
-    description="Part supplier relationship information from the TPC-H benchmark",
+    partitioning=[
+        Partition(column="ps_partkey", col_type=pl.Int64),
+        Partition(column="ps_suppkey", col_type=pl.Int64),
+    ],
+    partitioning_scheme=PartitioningScheme.HIVE,
+    docs_filters=[
+        Filter("ps_partkey", "=", 1),
+        Filter("ps_suppkey", "=", 1),
+    ],
+    description="""
+    Part supplier information from the TPC-H benchmark.
+    Contains details about parts supplied by suppliers including available quantity and supply cost.
+    """,
+    table_metadata_args={
+        "data_input": "Supplier inventory and pricing data from procurement systems",
+        "latency_info": "Real-time updates from supplier inventory management systems",
+        "example_notebook": "https://example.com/notebooks/supplier_analysis.ipynb",
+    },
 )
 ```
 
@@ -59,12 +80,15 @@ partsupp = ParquetTable(
 Function tables are created using the `@table` decorator and allow you to define custom data access logic:
 
 ```python
-from neuralake.core.tables import table
+from neuralake.core import table
 import polars as pl
 
-@table
-def supplier_sample() -> NlkDataFrame:
-    """A custom table that returns sample supplier data."""
+@table(
+    data_input="Supplier master data from vendor management system <code>/api/suppliers/master</code> endpoint",
+    latency_info="Updated weekly by the supplier_master_sync DAG on Airflow",
+)
+def supplier() -> NlkDataFrame:
+    """Supplier information from the TPC-H benchmark."""
     data = {
         "s_suppkey": [1, 2, 3, 4, 5],
         "s_name": ["Supplier#1", "Supplier#2", "Supplier#3", "Supplier#4", "Supplier#5"],
@@ -85,8 +109,8 @@ A Neuralake database is a Python module that contains tables. There are two main
 A module database wraps a Python module containing table definitions:
 
 ```python
-# my_database.py
-from neuralake.core.tables import table
+# tcph_tables.py
+from neuralake.core import table
 
 @table
 def supplier():
@@ -99,10 +123,10 @@ def partsupp():
     return NlkDataFrame(...)
 
 # Using the database
-from neuralake.core.catalog import ModuleDatabase
-import my_database
+from neuralake.core import ModuleDatabase
+import tcph_tables
 
-db = ModuleDatabase(my_database)
+db = ModuleDatabase(tcph_tables)
 
 # Query data
 >>> df = db.supplier()
@@ -119,46 +143,21 @@ shape: (5, 7)
 └──────────┴───────────┴────────────┴────────────┴──────────┴──────────┴──────────┘
 ```
 
-#### Custom database
-You can also create custom databases by implementing the `Database` protocol:
-
-```python
-from neuralake.core.catalog import Database, TableProtocol
-
-class MyDatabase(Database):
-    def __init__(self):
-        self._tables = {
-            "supplier": DeltalakeTable(...),
-            "partsupp": ParquetTable(...),
-        }
-
-    def get_tables(self, show_deprecated: bool = False) -> dict[str, TableProtocol]:
-        return self._tables
-
-    def table(self, name: str, *args, **kwargs) -> NlkDataFrame:
-        return self._tables[name](*args, **kwargs)
-```
-
 ### Catalogs
 
 A catalog is a Python module that is a collection of databases.
 
 ```python
-from neuralake.core.catalog import Catalog, ModuleDatabase
-import supplier_data
-import partsupp_data
+from neuralake.core import Catalog, ModuleDatabase
+import tcph_tables
 
 # Create a catalog
-dbs = {
-    "supplier_data": ModuleDatabase(supplier_data),
-    "partsupp_data": ModuleDatabase(partsupp_data),
-}
-
-MyCatalog = Catalog(dbs)
+dbs = {"tpc-h": ModuleDatabase(tcph_tables)}
+TPCHCatalog = Catalog(dbs)
 
 # Query data across databases
->>> supplier = MyCatalog.db("supplier_data").supplier()
->>> partsupp = MyCatalog.db("partsupp_data").partsupp()
+>>> supplier = TPCHCatalog.db("tpc-h").supplier()
+>>> partsupp = TPCHCatalog.db("tpc-h").partsupp()
 
 # Join data across databases
 >>> joined = supplier.join(partsupp, left_on="s_suppkey", right_on="ps_suppkey")

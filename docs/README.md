@@ -54,120 +54,156 @@ pip install neuralake
 
 ### Create a table and catalog
 
+First, create a module to define your tables (e.g., `my_tables.py`):
+
 ```python
+# tcph_tables.py
 from neuralake.core import (
     DeltalakeTable,
     ParquetTable,
     Filter,
-    Catalog
+    table,
+    NlkDataFrame,
+    Partition,
+    PartitioningScheme,
+)
+import pyarrow as pa
+import polars as pl
+
+# Delta Lake backed table
+part = DeltalakeTable(
+    name="part",
+    uri="s3://my-bucket/tpc-h/part",
+    schema=pa.schema(
+        [
+            ("p_partkey", pa.int64()),
+            ("p_name", pa.string()),
+            ("p_mfgr", pa.string()),
+            ("p_brand", pa.string()),
+            ("p_type", pa.string()),
+            ("p_size", pa.int32()),
+            ("p_container", pa.string()),
+            ("p_retailprice", pa.decimal128(12, 2)),
+            ("p_comment", pa.string()),
+        ]
+    ),
+    docs_filters=[
+        Filter("p_partkey", "=", 1),
+        Filter("p_brand", "=", "Brand#1"),
+    ],
+    unique_columns=["p_partkey"],
+    description="""
+    Part information from the TPC-H benchmark.
+    Contains details about parts including name, manufacturer, brand, and retail price.
+    """,
+    table_metadata_args={
+        "data_input": "Part catalog data from manufacturing systems, updated daily",
+        "latency_info": "Daily batch updates from manufacturing ERP system",
+        "example_notebook": "https://example.com/notebooks/part_analysis.ipynb",
+    },
 )
 
-# Define tables
-customers = ParquetTable(
-    name="customer",
-    uri='s3://my-bucket/tpc-h/customer',
-    schema=pa.schema([
-        ("c_custkey", pa.int64()),
-        ("c_name", pa.string()),
-        ("c_address", pa.string()),
-        ("c_nationkey", pa.int64()),
-        ("c_phone", pa.string()),
-        ("c_acctbal", pa.decimal128(12, 2)),
-        ("c_mktsegment", pa.string()),
-        ("c_comment", pa.string()),
-    ]),
-    docs_filters=[
-        Filter("c_custkey", "=", 1),
-        Filter("c_mktsegment", "=", "BUILDING"),
-    ],
-    unique_columns=['c_custkey'],
-    description="""
-    Customer information from the TPC-H benchmark.
-    Contains customer details including name, address, and market segment.
-    """,
+# Table defined as a function
+@table(
+    data_input="Supplier master data from vendor management system <code>/api/suppliers/master</code> endpoint",
+    latency_info="Updated weekly by the supplier_master_sync DAG on Airflow",
 )
+def supplier() -> NlkDataFrame:
+    """Supplier information from the TPC-H benchmark."""
+    data = {
+        "s_suppkey": [1, 2, 3, 4, 5],
+        "s_name": [
+            "Supplier#1",
+            "Supplier#2",
+        ],
+        "s_address": [
+            "123 Main St",
+            "456 Oak Ave",
+        ],
+        "s_nationkey": [1, 1],
+        "s_phone": ["555-0001", "555-0002"],
+        "s_acctbal": [1000.00, 2000.00],
+        "s_comment": ["Comment 1", "Comment 2"],
+    }
+    return NlkDataFrame(frame=pl.LazyFrame(data))
 
-orders = DeltalakeTable(
-    name="orders",
-    uri='s3://my-bucket/tpc-h/orders',
-    schema=pa.schema([
-        ("o_orderkey", pa.int64()),
-        ("o_custkey", pa.int64()),
-        ("o_orderstatus", pa.string()),
-        ("o_totalprice", pa.decimal128(12, 2)),
-        ("o_orderdate", pa.date32()),
-        ("o_orderpriority", pa.string()),
-        ("o_clerk", pa.string()),
-        ("o_shippriority", pa.int32()),
-        ("o_comment", pa.string()),
-    ]),
-    docs_filters=[
-        Filter("o_custkey", "=", 1),
-        Filter("o_orderdate", "=", "2024-01-01"),
-    ],
-    unique_columns=['o_orderkey'],
-    description="""
-    Order information from the TPC-H benchmark.
-    Contains order details including status, total price, and order date.
-    """,
-)
+```
+
+```python
+# tcph_catalog.py
+from neuralake.core import Catalog, ModuleDatabase
+import my_tables
 
 # Create a catalog
-dbs = {
-    "tpc-h": {
-        "customer": customers,
-        "orders": orders,
-    }
-}
-
-MyCatalog = Catalog(dbs)
+dbs = {"tpc-h": ModuleDatabase(my_tables)}
+TCPHCatalog = Catalog(dbs)
 ```
 
 ### Query the data
 
 ```python
->>> from my_catalogs import MyCatalog
+>>> from my_catalog import MyCatalog
 >>> from neuralake.core import Filter
 >>> 
->>> # Get customer information
->>> customer_data = MyCatalog.db("tpc-h").table(
-...     "customer",
+>>> # Get part and supplier information
+>>> part_data = TCPHCatalog.db("tpc-h").table(
+...     "part",
 ...     (
-...         Filter('c_custkey', '=', 1),
-...         Filter('c_mktsegment', '=', 'BUILDING'),
+...         Filter('p_partkey', 'in', [1, 2, 3, 4]),
+...         Filter('p_brand', 'in', ['Brand#1', 'Brand#2', 'Brand#3']),
 ...     ),
-... ).collect()
+... )
 >>> 
->>> # Get their orders
->>> order_data = MyCatalog.db("tpc-h").table(
-...     "orders",
-...     (
-...         Filter('o_custkey', '=', 1),
-...         Filter('o_orderdate', '>=', '2024-01-01'),
-...     ),
-... ).collect()
+>>> supplier_data = TCPHCatalog.db("tpc-h").table("supplier")
 >>> 
->>> print(customer_data)
-shape: (1, 8)
-┌───────────┬────────────┬────────────┬────────────┬───────────┬────────────┬────────────┬────────────┐
-│ c_custkey │ c_name     │ c_address  │ c_nationkey│ c_phone   │ c_acctbal  │ c_mktsegment│ c_comment │
-│ ---       │ ---        │ ---        │ ---        │ ---       │ ---        │ ---        │ ---        │
-│ i64       │ str        │ str        │ i64        │ str       │ dec        │ str        │ str        │
-╞═══════════╪════════════╪════════════╪════════════╪═══════════╪════════════╪════════════╪════════════╡
-│ 1         │ Customer#1 │ Address 1  │ 1          │ 123-456   │ 1000.00    │ BUILDING   │ Comment 1  |
-└───────────┴────────────┴────────────┴────────────┴───────────┴────────────┴────────────┴────────────┘
+>>> # Join part and supplier data and select specific columns
+>>> joined_data = part_data.join(
+...     supplier_data,
+...     left_on="p_partkey",
+...     right_on="s_suppkey",
+... ).select(["p_name", "p_brand", "s_name"]).collect()
+>>> 
+>>> print(joined_data)
+shape: (4, 3)
+┌────────────┬────────────┬────────────┐
+│ p_name     │ p_brand    │ s_name     │
+│ ---        │ ---        │ ---        │
+│ str        │ str        │ str        │
+╞════════════╪════════════╪════════════╡
+│ Part#1     │ Brand#1    │ Supplier#1 │
+│ Part#2     │ Brand#2    │ Supplier#2 │
+│ Part#3     │ Brand#3    │ Supplier#3 │
+│ Part#4     │ Brand#1    │ Supplier#4 │
+└────────────┴────────────┴────────────┘
+```
 
->>> print(order_data)
-shape: (3, 9)
-┌───────────┬───────────┬──────────────┬─────────────┬────────────┬─────────────────┬───────────┬─────────────────┬───────────┐
-│ o_orderkey│ o_custkey │ o_orderstatus│ o_totalprice│ o_orderdate│ o_orderpriority │ o_clerk   │ o_shippriority  │ o_comment │
-│ ---       │ ---       │ ---          │ ---         │ ---        │ ---             │ ---       │ ---             │ ---       │
-│ i64       │ i64       │ str          │ dec         │ date       │ str             │ str       │ i32             │ str       │
-╞═══════════╪═══════════╪══════════════╪═════════════╪════════════╪═════════════════╪═══════════╪═════════════════╪═══════════╡
-│ 1         │ …         │ …            │ 1000.00     │ 2024-01-01 │ 5-LOW           │ Clerk#1   │ 0               │ Order 1   │
-│ 2         │ …         │ …            │ 2000.00     │ 2024-01-02 │ 4-NOT SPEC      │ Clerk#2   │ 0               │ Order 2   │
-│ 3         │ …         │ …            │ 3000.00     │ 2024-01-03 │ 3-MEDIUM        │ Clerk#3   │ 0               │ Order 3   │
-└───────────┴───────────┴──────────────┴─────────────┴────────────┴─────────────────┴───────────┴─────────────────┴───────────┘
+### Generate a static site catalog
+You can export your catalog to a static site with a single command:
+
+Ensure you have NodeJS installed, and run:
+
+```python
+# export.py
+from neuralake.web_export import export_and_generate_site
+from tcph_catalog import TCPHCatalog
+
+# Export and generate the site
+export_and_generate_site(
+    catalogs=[("tcph", TPCHCatalog)], output_dir=str(output_dir)
+)
+```
+
+
+### Generate an API
+
+You can also generate a YAML configuration for [ROAPI](https://github.com/roapi/roapi):
+
+```python
+from neuralake import roapi_export
+from tcph_catalog import TCPHCatalog
+
+# Generate ROAPI config
+roapi_export.generate_config(TCPHCatalog, output_file="roapi-config.yaml")
 ```
 
 ## About Neuralink

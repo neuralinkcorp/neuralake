@@ -4,15 +4,19 @@ build-backend = "hatchling.build"
 
 [project]
 name = "neuralake"
-version = "0.0.1"
+version = "0.2.2"
+description = "A simple platform for complex data"
+readme = "../docs/README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
 authors = [
-  { name="Gautham Acharya", email="gautacharya@gmail.com" },
+    { name = "Gautham Acharya", email = "gautacharya@gmail.com" }
 ]
-description = "The Neuralake catalog interface"
-requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
+    "License :: OSI Approved :: MIT License",
+    "Development Status :: 4 - Beta",
 ]
 dependencies = [
     "boto3==1.26.20",
@@ -20,6 +24,7 @@ dependencies = [
     "polars==1.9.0",
     "pyarrow==17.0.0",
     "ipython==8.5.0",
+    "typing_extensions==4.13.2",
 ]
 
 [project.optional-dependencies]
@@ -27,9 +32,8 @@ dev = [
     "mkdocs>=1.5.0",
     "mkdocstrings",
     "mkdocstrings-python>=1.7.0",
-    "typing_extensions==4.13.2",
-    "mkdocs-material",
     "pytest>=7.0.0",
+    "mkdocs-material",
     "pytest-cov>=4.0.0",
     "black>=23.0.0",
     "flake8>=6.0.0",
@@ -39,6 +43,12 @@ dev = [
 [tool.hatch.build.targets.wheel]
 packages = ["neuralake"]
 only-include = ["neuralake"]
+include = [
+    "neuralake/export/js/web_catalog/package.json",
+    "neuralake/export/js/web_catalog/cli.js",
+    "neuralake/export/js/web_catalog/src/**/*",
+    "../docs/README.md",
+]
 
 [tool.hatch.metadata]
 allow-direct-references = true

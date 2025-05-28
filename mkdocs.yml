@@ -70,7 +70,6 @@ site_dir: site
 
 nav:
   - Home: /
-  - Getting Started: getting-started.md
   - User Guide: user-guide.md
 
 hooks:
