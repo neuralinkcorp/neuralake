@@ -36,6 +36,11 @@ part = DeltalakeTable(
     Part information from the TPC-H benchmark.
     Contains details about parts including name, manufacturer, brand, and retail price.
     """,
+    table_metadata_args={
+        "data_input": "Part catalog data from manufacturing systems, updated daily",
+        "latency_info": "Daily batch updates from manufacturing ERP system",
+        "example_notebook": "https://example.com/notebooks/part_analysis.ipynb",
+    },
 )
 
 
@@ -82,6 +87,11 @@ partsupp = ParquetTable(
     Part supplier information from the TPC-H benchmark.
     Contains details about parts supplied by suppliers including available quantity and supply cost.
     """,
+    table_metadata_args={
+        "data_input": "Supplier inventory and pricing data from procurement systems",
+        "latency_info": "Real-time updates from supplier inventory management systems",
+        "example_notebook": "https://example.com/notebooks/supplier_analysis.ipynb",
+    },
 )
 
 
@@ -144,6 +154,11 @@ orders = DeltalakeTable(
     Order information from the TPC-H benchmark.
     Contains order details including status, total price, and order date.
     """,
+    table_metadata_args={
+        "data_input": "Order data from e-commerce and retail systems",
+        "latency_info": "Near real-time order processing with 5-minute delay",
+        "example_notebook": "https://example.com/notebooks/order_analysis.ipynb",
+    },
 )
 
 
@@ -211,6 +226,11 @@ nation = ParquetTable(
     Nation information from the TPC-H benchmark.
     Contains details about nations including name and region.
     """,
+    table_metadata_args={
+        "data_input": "Geographic reference data from global operations database",
+        "latency_info": "Static reference data, updated quarterly",
+        "example_notebook": "https://example.com/notebooks/geographic_analysis.ipynb",
+    },
 )
 
 

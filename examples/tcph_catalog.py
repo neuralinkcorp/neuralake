@@ -1,6 +1,6 @@
 from neuralake.core import Catalog, ModuleDatabase
-import tpch_tables
+import tcph_tables
 
 # Create a catalog
-dbs = {"tpc-h": ModuleDatabase(tpch_tables)}
+dbs = {"tpc-h": ModuleDatabase(tcph_tables)}
 TPCHCatalog = Catalog(dbs)

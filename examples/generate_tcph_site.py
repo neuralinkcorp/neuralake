@@ -162,9 +162,13 @@ def mock_get_schema(self):
 
 def main():
     # Parse command line arguments
-    parser = argparse.ArgumentParser(description='Generate TPC-H web catalog')
-    parser.add_argument('--output-dir', type=str, default=None,
-                      help='Output directory for the web catalog (default: ./web_catalog)')
+    parser = argparse.ArgumentParser(description="Generate TPC-H web catalog")
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default=None,
+        help="Output directory for the web catalog (default: ./web_catalog)",
+    )
     args = parser.parse_args()
 
     # Get the output directory
