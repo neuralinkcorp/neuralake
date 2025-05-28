@@ -44,7 +44,10 @@ part = DeltalakeTable(
 )
 
 
-@table
+@table(
+    data_input="Supplier master data from vendor management system <code>/api/suppliers/master</code> endpoint",
+    latency_info="Updated weekly by the supplier_master_sync DAG on Airflow",
+)
 def supplier() -> NlkDataFrame:
     """Supplier information from the TPC-H benchmark."""
     data = {
@@ -95,7 +98,10 @@ partsupp = ParquetTable(
 )
 
 
-@table
+@table(
+    data_input="Customer profile data from CRM system <code>/api/customers/profiles</code> endpoint",
+    latency_info="Updated daily by the customer_profile_sync DAG on Airflow",
+)
 def customer() -> NlkDataFrame:
     """Customer information from the TPC-H benchmark."""
     data = {
@@ -162,7 +168,10 @@ orders = DeltalakeTable(
 )
 
 
-@table
+@table(
+    data_input="Order line items from fulfillment system <code>/api/orders/line_items</code> endpoint",
+    latency_info="Updated hourly by the order_line_sync DAG on Airflow",
+)
 def lineitem() -> NlkDataFrame:
     """Line item information from the TPC-H benchmark."""
     data = {
@@ -234,7 +243,10 @@ nation = ParquetTable(
 )
 
 
-@table
+@table(
+    data_input="Regional hierarchy data from global operations <code>/api/regions/hierarchy</code> endpoint",
+    latency_info="Updated monthly by the region_hierarchy_sync DAG on Airflow",
+)
 def region() -> NlkDataFrame:
     """Region information from the TPC-H benchmark."""
     data = {
