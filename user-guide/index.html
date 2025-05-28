@@ -11,8 +11,6 @@
         <link rel="canonical" href="https://neuralink.github.io/neuralake/user-guide/">
       
       
-        <link rel="prev" href="../getting-started/">
-      
       
       
       <link rel="icon" href="../images/logo.png">
@@ -218,25 +216,6 @@
   
   
   
-  
-    <li class="md-tabs__item">
-      <a href="../getting-started/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Getting Started
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
     
   
   
@@ -326,28 +305,6 @@
       
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Getting Started
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -421,9 +378,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#deltalake-tables" class="md-nav__link">
+  <a href="#delta-lake-tables" class="md-nav__link">
     <span class="md-ellipsis">
-      DeltaLake tables
+      Delta Lake tables
     </span>
   </a>
   
@@ -466,15 +423,6 @@
   <a href="#module-database" class="md-nav__link">
     <span class="md-ellipsis">
       Module database
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#custom-database" class="md-nav__link">
-    <span class="md-ellipsis">
-      Custom database
     </span>
   </a>
   
@@ -572,59 +520,83 @@
 <h2 id="core-concepts">Core concepts<a class="headerlink" href="#core-concepts" title="Permanent link">&para;</a></h2>
 <h3 id="tables">Tables<a class="headerlink" href="#tables" title="Permanent link">&para;</a></h3>
 <p>A table in Neuralake is a Python function that returns an <code>NlkDataFrame</code>. An <code>NlkDataFrame</code> is a thin wrapper of the <a href="https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html">polars LazyFrame</a>. Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by <a href="https://delta.io/">DeltaLake</a> tables, <a href="https://parquet.apache.org/">Parquet tables</a>, or pure Python functions.</p>
-<h4 id="deltalake-tables">DeltaLake tables<a class="headerlink" href="#deltalake-tables" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeltalakeTable</span>
+<h4 id="delta-lake-tables">Delta Lake tables<a class="headerlink" href="#delta-lake-tables" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeltalakeTable</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
 
 <span class="c1"># Define the schema</span>
 <span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
-    <span class="p">(</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;s_name&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;s_address&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;s_nationkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;s_phone&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;s_acctbal&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">decimal128</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-    <span class="p">(</span><span class="s2">&quot;s_comment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_partkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_name&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_mfgr&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_brand&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_type&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_size&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_container&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
+    <span class="p">(</span><span class="s2">&quot;p_retailprice&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">decimal128</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
+    <span class="p">(</span><span class="s2">&quot;p_comment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
 <span class="p">])</span>
 
 <span class="c1"># Create the table</span>
-<span class="n">supplier</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;supplier&quot;</span><span class="p">,</span>
-    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/tpc-h/supplier/&quot;</span><span class="p">,</span>
+<span class="n">part</span> <span class="o">=</span> <span class="n">DeltalakeTable</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;part&quot;</span><span class="p">,</span>
+    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/tpc-h/part&quot;</span><span class="p">,</span>
     <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Supplier information from the TPC-H benchmark&quot;</span><span class="p">,</span>
-    <span class="n">unique_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">],</span>
+    <span class="n">docs_filters</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;p_partkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;p_brand&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="s2">&quot;Brand#1&quot;</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">unique_columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;p_partkey&quot;</span><span class="p">],</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Part information from the TPC-H benchmark.</span>
+<span class="s2">    Contains details about parts including name, manufacturer, brand, and retail price.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">table_metadata_args</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;data_input&quot;</span><span class="p">:</span> <span class="s2">&quot;Part catalog data from manufacturing systems, updated daily&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;latency_info&quot;</span><span class="p">:</span> <span class="s2">&quot;Daily batch updates from manufacturing ERP system&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;example_notebook&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/notebooks/part_analysis.ipynb&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">)</span>
 </code></pre></div>
 <h4 id="parquet-tables">Parquet tables<a class="headerlink" href="#parquet-tables" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParquetTable</span><span class="p">,</span> <span class="n">Partition</span><span class="p">,</span> <span class="n">PartitioningScheme</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ParquetTable</span><span class="p">,</span> <span class="n">Partition</span><span class="p">,</span> <span class="n">PartitioningScheme</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
-
-<span class="c1"># Define the schema</span>
-<span class="n">schema</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">schema</span><span class="p">([</span>
-    <span class="p">(</span><span class="s2">&quot;ps_partkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int64</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;ps_availqty&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">int32</span><span class="p">()),</span>
-    <span class="p">(</span><span class="s2">&quot;ps_supplycost&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">decimal128</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span>
-    <span class="p">(</span><span class="s2">&quot;ps_comment&quot;</span><span class="p">,</span> <span class="n">pa</span><span class="o">.</span><span class="n">string</span><span class="p">()),</span>
-<span class="p">])</span>
 
 <span class="c1"># Create the table</span>
 <span class="n">partsupp</span> <span class="o">=</span> <span class="n">ParquetTable</span><span class="p">(</span>
     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;partsupp&quot;</span><span class="p">,</span>
     <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/tpc-h/partsupp&quot;</span><span class="p">,</span>
-    <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">,</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Part supplier relationship information from the TPC-H benchmark&quot;</span><span class="p">,</span>
+    <span class="n">partitioning</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Partition</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;ps_partkey&quot;</span><span class="p">,</span> <span class="n">col_type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Int64</span><span class="p">),</span>
+        <span class="n">Partition</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">,</span> <span class="n">col_type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Int64</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">partitioning_scheme</span><span class="o">=</span><span class="n">PartitioningScheme</span><span class="o">.</span><span class="n">HIVE</span><span class="p">,</span>
+    <span class="n">docs_filters</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;ps_partkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    Part supplier information from the TPC-H benchmark.</span>
+<span class="s2">    Contains details about parts supplied by suppliers including available quantity and supply cost.</span>
+<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">table_metadata_args</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;data_input&quot;</span><span class="p">:</span> <span class="s2">&quot;Supplier inventory and pricing data from procurement systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;latency_info&quot;</span><span class="p">:</span> <span class="s2">&quot;Real-time updates from supplier inventory management systems&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;example_notebook&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/notebooks/supplier_analysis.ipynb&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
 <span class="p">)</span>
 </code></pre></div>
 <h4 id="function-tables">Function tables<a class="headerlink" href="#function-tables" title="Permanent link">&para;</a></h4>
 <p>Function tables are created using the <code>@table</code> decorator and allow you to define custom data access logic:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">polars</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
 
-<span class="nd">@table</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">supplier_sample</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NlkDataFrame</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom table that returns sample supplier data.&quot;&quot;&quot;</span>
+<span class="nd">@table</span><span class="p">(</span>
+    <span class="n">data_input</span><span class="o">=</span><span class="s2">&quot;Supplier master data from vendor management system &lt;code&gt;/api/suppliers/master&lt;/code&gt; endpoint&quot;</span><span class="p">,</span>
+    <span class="n">latency_info</span><span class="o">=</span><span class="s2">&quot;Updated weekly by the supplier_master_sync DAG on Airflow&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">supplier</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">NlkDataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Supplier information from the TPC-H benchmark.&quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;s_suppkey&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
         <span class="s2">&quot;s_name&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Supplier#1&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#2&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#3&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#4&quot;</span><span class="p">,</span> <span class="s2">&quot;Supplier#5&quot;</span><span class="p">],</span>
@@ -640,8 +612,8 @@
 <p>A Neuralake database is a Python module that contains tables. There are two main ways to create databases:</p>
 <h4 id="module-database">Module database<a class="headerlink" href="#module-database" title="Permanent link">&para;</a></h4>
 <p>A module database wraps a Python module containing table definitions:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># my_database.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.tables</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># tcph_tables.py</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span>
 
 <span class="nd">@table</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">supplier</span><span class="p">():</span>
@@ -654,10 +626,10 @@
     <span class="k">return</span> <span class="n">NlkDataFrame</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
 
 <span class="c1"># Using the database</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleDatabase</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">my_database</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleDatabase</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tcph_tables</span>
 
-<span class="n">db</span> <span class="o">=</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">my_database</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">tcph_tables</span><span class="p">)</span>
 
 <span class="c1"># Query data</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">supplier</span><span class="p">()</span>
@@ -673,40 +645,18 @@
 <span class="err">│</span> <span class="mi">5</span>        <span class="err">│</span> <span class="n">Supplier</span><span class="c1">#5│ 654 Maple Dr│ 3         │ 555-0005 │ 5000.00  │ Comment 5│</span>
 <span class="err">└──────────┴───────────┴────────────┴────────────┴──────────┴──────────┴──────────┘</span>
 </code></pre></div>
-<h4 id="custom-database">Custom database<a class="headerlink" href="#custom-database" title="Permanent link">&para;</a></h4>
-<p>You can also create custom databases by implementing the <code>Database</code> protocol:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">Database</span><span class="p">,</span> <span class="n">TableProtocol</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MyDatabase</span><span class="p">(</span><span class="n">Database</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tables</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;supplier&quot;</span><span class="p">:</span> <span class="n">DeltalakeTable</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
-            <span class="s2">&quot;partsupp&quot;</span><span class="p">:</span> <span class="n">ParquetTable</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
-        <span class="p">}</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_tables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show_deprecated</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TableProtocol</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tables</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">table</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NlkDataFrame</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tables</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</code></pre></div>
 <h3 id="catalogs">Catalogs<a class="headerlink" href="#catalogs" title="Permanent link">&para;</a></h3>
 <p>A catalog is a Python module that is a collection of databases.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core.catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">ModuleDatabase</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">supplier_data</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">partsupp_data</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">ModuleDatabase</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tcph_tables</span>
 
 <span class="c1"># Create a catalog</span>
-<span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;supplier_data&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">supplier_data</span><span class="p">),</span>
-    <span class="s2">&quot;partsupp_data&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">partsupp_data</span><span class="p">),</span>
-<span class="p">}</span>
-
-<span class="n">MyCatalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="p">(</span><span class="n">dbs</span><span class="p">)</span>
+<span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">tcph_tables</span><span class="p">)}</span>
+<span class="n">TPCHCatalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="p">(</span><span class="n">dbs</span><span class="p">)</span>
 
 <span class="c1"># Query data across databases</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">supplier</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;supplier_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">supplier</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">partsupp</span> <span class="o">=</span> <span class="n">MyCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;partsupp_data&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">partsupp</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">supplier</span> <span class="o">=</span> <span class="n">TPCHCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">supplier</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">partsupp</span> <span class="o">=</span> <span class="n">TPCHCatalog</span><span class="o">.</span><span class="n">db</span><span class="p">(</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">partsupp</span><span class="p">()</span>
 
 <span class="c1"># Join data across databases</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">joined</span> <span class="o">=</span> <span class="n">supplier</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">partsupp</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s2">&quot;s_suppkey&quot;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">)</span>

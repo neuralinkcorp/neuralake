@@ -218,25 +218,6 @@
   
   
     <li class="md-tabs__item">
-      <a href="getting-started/" class="md-tabs__link">
-        
-  
-  
-    
-  
-  Getting Started
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
       <a href="user-guide/" class="md-tabs__link">
         
   
@@ -309,28 +290,6 @@
   
   <span class="md-ellipsis">
     Home
-    
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="getting-started/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    Getting Started
     
   </span>
   
@@ -497,47 +456,17 @@
         <span class="s2">&quot;s_name&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="s2">&quot;Supplier#1&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Supplier#2&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Supplier#3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Supplier#4&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Supplier#5&quot;</span><span class="p">,</span>
         <span class="p">],</span>
         <span class="s2">&quot;s_address&quot;</span><span class="p">:</span> <span class="p">[</span>
             <span class="s2">&quot;123 Main St&quot;</span><span class="p">,</span>
             <span class="s2">&quot;456 Oak Ave&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;789 Pine Rd&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;321 Elm St&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;654 Maple Dr&quot;</span><span class="p">,</span>
         <span class="p">],</span>
-        <span class="s2">&quot;s_nationkey&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
-        <span class="s2">&quot;s_phone&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;555-0001&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0002&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0003&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0004&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0005&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;s_acctbal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1000.00</span><span class="p">,</span> <span class="mf">2000.00</span><span class="p">,</span> <span class="mf">3000.00</span><span class="p">,</span> <span class="mf">4000.00</span><span class="p">,</span> <span class="mf">5000.00</span><span class="p">],</span>
-        <span class="s2">&quot;s_comment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Comment 1&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 2&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 3&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 4&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 5&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;s_nationkey&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="s2">&quot;s_phone&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;555-0001&quot;</span><span class="p">,</span> <span class="s2">&quot;555-0002&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;s_acctbal&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1000.00</span><span class="p">,</span> <span class="mf">2000.00</span><span class="p">],</span>
+        <span class="s2">&quot;s_comment&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Comment 1&quot;</span><span class="p">,</span> <span class="s2">&quot;Comment 2&quot;</span><span class="p">],</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="n">NlkDataFrame</span><span class="p">(</span><span class="n">frame</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">LazyFrame</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
-
-<span class="c1"># Parquet backed table</span>
-<span class="n">partsupp</span> <span class="o">=</span> <span class="n">ParquetTable</span><span class="p">(</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;partsupp&quot;</span><span class="p">,</span>
-    <span class="n">uri</span><span class="o">=</span><span class="s2">&quot;s3://my-bucket/tpc-h/partsupp&quot;</span><span class="p">,</span>
-    <span class="n">partitioning</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">Partition</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;ps_partkey&quot;</span><span class="p">,</span> <span class="n">col_type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Int64</span><span class="p">),</span>
-        <span class="n">Partition</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">,</span> <span class="n">col_type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Int64</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">partitioning_scheme</span><span class="o">=</span><span class="n">PartitioningScheme</span><span class="o">.</span><span class="n">HIVE</span><span class="p">,</span>
-    <span class="n">docs_filters</span><span class="o">=</span><span class="p">[</span>
-        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;ps_partkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="n">Filter</span><span class="p">(</span><span class="s2">&quot;ps_suppkey&quot;</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-    <span class="p">],</span>
-    <span class="n">description</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    Part supplier information from the TPC-H benchmark.</span>
-<span class="s2">    Contains details about parts supplied by suppliers including available quantity and supply cost.</span>
-<span class="s2">    &quot;&quot;&quot;</span><span class="p">,</span>
-    <span class="n">table_metadata_args</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;data_input&quot;</span><span class="p">:</span> <span class="s2">&quot;Supplier inventory and pricing data from procurement systems&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;latency_info&quot;</span><span class="p">:</span> <span class="s2">&quot;Real-time updates from supplier inventory management systems&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;example_notebook&quot;</span><span class="p">:</span> <span class="s2">&quot;https://example.com/notebooks/supplier_analysis.ipynb&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-<span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># tcph_catalog.py</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">ModuleDatabase</span>
