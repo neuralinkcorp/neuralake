@@ -13,6 +13,7 @@ import logging
 logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stderr)
 logger = logging.getLogger(__name__)
 
+
 def check_node_dependencies():
     """Check if NodeJS is installed."""
     # Check for NodeJS
@@ -85,7 +86,9 @@ def export_and_generate_site(
     """
     # Check for NodeJS dependencies first
     if not check_node_dependencies():
-        raise RuntimeError("Required NodeJS dependencies are missing. Please install NodeJS to generate static files.")
+        raise RuntimeError(
+            "Required NodeJS dependencies are missing. Please install NodeJS to generate static files."
+        )
 
     # Export catalog to a JSON file
     catalog_data = export_neuralake(catalogs)
