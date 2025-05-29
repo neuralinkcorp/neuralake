@@ -44,10 +44,13 @@ dev = [
 packages = ["neuralake"]
 only-include = ["neuralake"]
 include = [
-    "neuralake/export/js/web_catalog/package.json",
-    "neuralake/export/js/web_catalog/cli.js",
-    "neuralake/export/js/web_catalog/src/**/*",
+    "neuralake/export/static_site/precompiled/**/*",
     "../docs/README.md",
+]
+
+[tool.hatch.build]
+include = [
+    "neuralake/export/static_site/precompiled/**/*",
 ]
 
 [tool.hatch.metadata]

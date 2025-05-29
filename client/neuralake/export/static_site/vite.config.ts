@@ -1,23 +1,26 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
+import path from 'path';
+
+const packageRoot = path.resolve(__dirname);
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: process.env.NODE_ENV === 'production' ? '.' : 'src',
+  root: path.join(packageRoot, 'src'),
+  base: './',
   build: {
-    outDir: 'dist',
+    outDir: '../precompiled',
     emptyOutDir: true,
     sourcemap: true,
+    target: 'esnext',
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'src/index.html')
       },
-      external: ['virtual:data-json']
     }
   },
   plugins: [react()],
   optimizeDeps: {
-    exclude: ['virtual:data-json']
   }
 })

@@ -3,7 +3,7 @@ name: Test, Build and Publish neuralake
 on:
   push:
     branches:
-      - gautham/integrate-node
+      - gautham/precompiled
   release:
     types: [created]
   workflow_dispatch:  # Allows manual triggering
@@ -163,7 +163,7 @@ jobs:
       - name: Build web catalog
         run: |
           cd client
-          pip install -e ".[dev]"
+          pip install -e .
           cd ../docs/examples/
           mkdir web_catalog
           python generate_tcph_site.py --output-dir web_catalog
