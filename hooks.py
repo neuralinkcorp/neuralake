@@ -21,12 +21,11 @@ def on_page_markdown(markdown, page, config, files):
     return markdown
 
 def on_post_build(config):
-    # Get the site directory from config
+    # Copy the data.json file to the /site directory
+    # This is used to render the web catalog as an iFrame in the docs
     site_dir = config['site_dir']
     
-    # Source and destination paths
     src_path = os.path.join('docs', 'examples', 'web_catalog', 'data.json')
     dst_path = os.path.join(site_dir, 'data.json')
     
-    # Copy the file
     shutil.copy2(src_path, dst_path)
