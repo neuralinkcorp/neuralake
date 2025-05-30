@@ -13,7 +13,7 @@ export default defineConfig({
     outDir: '../precompiled',
     emptyOutDir: true,
     sourcemap: true,
-    target: 'esnext',
+    target: 'ES2022',
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'src/index.html')

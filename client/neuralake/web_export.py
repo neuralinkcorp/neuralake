@@ -74,18 +74,15 @@ def export_and_generate_site(
     # Export catalog to a JSON file
     catalog_data = export_neuralake(catalogs)
 
-    # Create output directory if it doesn't exist
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Write catalog data to data.json in output directory
     with open(output_path / "data.json", "w") as f:
         json.dump(catalog_data, f, indent=2)
 
-        # Fallback to direct path (for development)
     project_root = Path(__file__).parent
     precompiled_dir = project_root / "export" / "static_site" / "precompiled"
-        
+
     logger.info(f"Copying precompiled directory {precompiled_dir} to {output_path}")
     if not precompiled_dir.exists():
         raise FileNotFoundError(

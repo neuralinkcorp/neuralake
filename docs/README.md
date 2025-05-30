@@ -180,8 +180,6 @@ shape: (4, 3)
 ### Generate a static site catalog
 You can export your catalog to a static site with a single command:
 
-Ensure you have NodeJS installed, and run:
-
 ```python
 # export.py
 from neuralake.web_export import export_and_generate_site

@@ -1,3 +1,6 @@
+import shutil
+import os
+
 def on_page_markdown(markdown, page, config, files):
     iframe_str = """
 
@@ -16,3 +19,13 @@ def on_page_markdown(markdown, page, config, files):
     if page.file.src_path == "README.md":
         markdown = markdown.replace("<!-- mkdocs:iframe -->", iframe_str)
     return markdown
+
+def on_post_build(config):
+    # Copy the data.json file to the /site directory
+    # This is used to render the web catalog as an iFrame in the docs
+    site_dir = config['site_dir']
+    
+    src_path = os.path.join('docs', 'examples', 'web_catalog', 'data.json')
+    dst_path = os.path.join(site_dir, 'data.json')
+    
+    shutil.copy2(src_path, dst_path)
