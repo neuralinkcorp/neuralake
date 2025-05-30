@@ -1,3 +1,6 @@
+import shutil
+import os
+
 def on_page_markdown(markdown, page, config, files):
     iframe_str = """
 
@@ -16,3 +19,14 @@ def on_page_markdown(markdown, page, config, files):
     if page.file.src_path == "README.md":
         markdown = markdown.replace("<!-- mkdocs:iframe -->", iframe_str)
     return markdown
+
+def on_post_build(config):
+    # Get the site directory from config
+    site_dir = config['site_dir']
+    
+    # Source and destination paths
+    src_path = os.path.join('docs', 'examples', 'web_catalog', 'data.json')
+    dst_path = os.path.join(site_dir, 'data.json')
+    
+    # Copy the file
+    shutil.copy2(src_path, dst_path)
