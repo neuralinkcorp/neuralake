@@ -75,10 +75,13 @@ def export_and_generate_site(
     catalog_data = export_neuralake(catalogs)
 
     output_path = Path(output_dir)
+    # Remove output directory if it exists to ensure idempotency
+    if output_path.exists():
+        shutil.rmtree(output_path)
     output_path.mkdir(parents=True, exist_ok=True)
 
     with open(output_path / "data.json", "w") as f:
-        json.dump(catalog_data, f, indent=2)
+        json.dump(catalog_data, f)
 
     project_root = Path(__file__).parent
     precompiled_dir = project_root / "export" / "static_site" / "precompiled"

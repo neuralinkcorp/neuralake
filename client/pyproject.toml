@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "neuralake"
-version = "0.2.2"
+version = "0.0.5"
 description = "A simple platform for complex data"
 readme = "../docs/README.md"
 requires-python = ">=3.8"
@@ -40,18 +40,40 @@ dev = [
     "mypy>=1.0.0"
 ]
 
+[tool.hatch.build]
+include = [
+    "neuralake/**/*",
+    "../docs/README.md",
+]
+exclude = [
+    "test/**/*",
+    "neuralake/export/static_site/node_modules/**/*",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "neuralake/**/*",
+    "../docs/README.md",
+]
+exclude = [
+    "test/**/*",
+    "neuralake/export/static_site/node_modules/**/*",
+]
+
+[tool.hatch.build.hooks.custom]
+path = "neuralake/export/static_site/build.py"
+
 [tool.hatch.build.targets.wheel]
 packages = ["neuralake"]
 only-include = ["neuralake"]
 include = [
-    "neuralake/export/static_site/precompiled/**/*",
+    "neuralake/**/*",
     "../docs/README.md",
 ]
-
-[tool.hatch.build]
-include = [
-    "neuralake/export/static_site/precompiled/**/*",
+exclude = [
+    "neuralake/export/static_site/node_modules/**/*",
 ]
+metadata-version = "2.1"
 
 [tool.hatch.metadata]
 allow-direct-references = true
