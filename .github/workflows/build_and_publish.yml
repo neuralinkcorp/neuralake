@@ -3,7 +3,11 @@ name: Test, Build and Publish neuralake
 on:
   push:
     branches:
-      - gautham/precompiled
+      - main
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened, ready_for_review]
   release:
     types: [created]
   workflow_dispatch:  # Allows manual triggering
@@ -12,46 +16,6 @@ permissions:
   contents: write
 
 jobs:
-  check-version:
-    runs-on: ubuntu-latest
-    outputs:
-      should_build: ${{ steps.version_check.outputs.should_build }}
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 2  # Need at least 2 commits to compare
-    
-    - name: Check version bump
-      id: version_check
-      run: |
-        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-          echo "Manual trigger - proceeding with build"
-          echo "should_build=true" >> $GITHUB_OUTPUT
-          exit 0
-        fi
-        
-        if [ "${{ github.event_name }}" = "release" ]; then
-          echo "Release event - proceeding with build"
-          echo "should_build=true" >> $GITHUB_OUTPUT
-          exit 0
-        fi
-        
-        # Get the current and previous version from pyproject.toml
-        CURRENT_VERSION=$(grep '^version = ' client/pyproject.toml | cut -d'"' -f2)
-        git checkout HEAD~1
-        PREVIOUS_VERSION=$(grep '^version = ' client/pyproject.toml | cut -d'"' -f2)
-        git checkout -
-        
-        if [ "$CURRENT_VERSION" = "$PREVIOUS_VERSION" ]; then
-          echo "Version not changed (current: $CURRENT_VERSION, previous: $PREVIOUS_VERSION)"
-          echo "should_build=false" >> $GITHUB_OUTPUT
-          exit 0
-        fi
-        
-        echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
-        echo "should_build=true" >> $GITHUB_OUTPUT
-        exit 0
-
   run-tests:
     runs-on: ubuntu-latest
     steps:
@@ -106,12 +70,10 @@ jobs:
         #mypy neuralake
 
   build-and-publish:
-    needs: [check-version, run-tests, code-quality]
-    if: |
-      needs.check-version.outputs.should_build == 'true' &&
-      needs.run-tests.result == 'success' &&
-      needs.code-quality.result == 'success'
+    needs: [run-tests, code-quality]
+    if: github.ref == 'refs/heads/main' || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    environment: ci
     steps:
       - uses: actions/checkout@v3
       
@@ -125,20 +87,39 @@ jobs:
           python -m pip install --upgrade pip
           pip install build twine
       
+      - name: Check if version exists in PyPI
+        id: version_check
+        run: |
+          cd client
+          CURRENT_VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
+          echo "Checking if version $CURRENT_VERSION exists in PyPI"
+          if pip index versions neuralake | grep -q "$CURRENT_VERSION"; then
+            echo "Version $CURRENT_VERSION already exists in PyPI"
+            echo "should_build=false" >> $GITHUB_OUTPUT
+            exit 0
+          else
+            echo "Version $CURRENT_VERSION is new"
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+      
       - name: Build package
+        if: steps.version_check.outputs.should_build == 'true'
         run: |
           cd client
           python -m build
       
       - name: Publish package to PyPI
+        if: steps.version_check.outputs.should_build == 'true'
         env:
-          TWINE_USERNAME: "__token__"
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
           cd client
-          # twine upload --repository testpypi dist/* --verbose
+          echo "TWINE_PASSWORD is set: $([ ! -z "$TWINE_PASSWORD" ] && echo "yes" || echo "no")"
+          python -m twine upload --username __token__ --password "$TWINE_PASSWORD" dist/* --verbose
 
   build-and-publish-docs:
+    if: github.ref == 'refs/heads/main' || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
