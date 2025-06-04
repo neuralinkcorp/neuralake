@@ -142,7 +142,7 @@ TCPHCatalog = Catalog(dbs)
 ### Query the data
 
 ```python
->>> from my_catalog import MyCatalog
+>>> from my_catalog import TCPHCatalog
 >>> from neuralake.core import Filter
 >>> 
 >>> # Get part and supplier information
