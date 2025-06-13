@@ -222,7 +222,7 @@ class DeltalakeTable(TableProtocol):
         if columns:
             frame = frame.select(columns)
 
-        return NlkDataFrame(frame=frame.lazy())
+        return frame.lazy()
 
     def delta_table(
         self, storage_options: dict[str, Any] | None = None, version: int | None = None

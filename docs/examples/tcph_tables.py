@@ -71,7 +71,7 @@ def supplier() -> NlkDataFrame:
         "s_acctbal": [1000.00, 2000.00, 3000.00, 4000.00, 5000.00],
         "s_comment": ["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5"],
     }
-    return NlkDataFrame(frame=pl.LazyFrame(data))
+    return NlkDataFrame(data)
 
 
 partsupp = ParquetTable(
@@ -132,7 +132,7 @@ def customer() -> NlkDataFrame:
         ],
         "c_comment": ["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5"],
     }
-    return NlkDataFrame(frame=pl.LazyFrame(data))
+    return NlkDataFrame(data)
 
 
 orders = DeltalakeTable(
@@ -216,7 +216,7 @@ def lineitem() -> NlkDataFrame:
         "l_shipmode": ["TRUCK", "SHIP", "AIR", "RAIL", "TRUCK"],
         "l_comment": ["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5"],
     }
-    return NlkDataFrame(frame=pl.LazyFrame(data))
+    return NlkDataFrame(data)
 
 
 nation = ParquetTable(
@@ -254,4 +254,4 @@ def region() -> NlkDataFrame:
         "r_name": ["AMERICA", "ASIA", "EUROPE", "AFRICA", "MIDDLE EAST"],
         "r_comment": ["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5"],
     }
-    return NlkDataFrame(frame=pl.LazyFrame(data))
+    return NlkDataFrame(data)

@@ -12,7 +12,7 @@
 
 # Neuralake: A simple platform for complex data
 
-Neuralake is a simple query interface for multimodal data at any scale. 
+Neuralake is a simple query interface for multimodal data at any scale.
 
 With Neuralake, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!
 
@@ -125,7 +125,7 @@ def supplier() -> NlkDataFrame:
         "s_acctbal": [1000.00, 2000.00],
         "s_comment": ["Comment 1", "Comment 2"],
     }
-    return NlkDataFrame(frame=pl.LazyFrame(data))
+    return pl.LazyFrame(data)
 
 ```
 
@@ -144,7 +144,7 @@ TCPHCatalog = Catalog(dbs)
 ```python
 >>> from my_catalog import MyCatalog
 >>> from neuralake.core import Filter
->>> 
+>>>
 >>> # Get part and supplier information
 >>> part_data = TCPHCatalog.db("tpc-h").table(
 ...     "part",
@@ -153,16 +153,16 @@ TCPHCatalog = Catalog(dbs)
 ...         Filter('p_brand', 'in', ['Brand#1', 'Brand#2', 'Brand#3']),
 ...     ),
 ... )
->>> 
+>>>
 >>> supplier_data = TCPHCatalog.db("tpc-h").table("supplier")
->>> 
+>>>
 >>> # Join part and supplier data and select specific columns
 >>> joined_data = part_data.join(
 ...     supplier_data,
 ...     left_on="p_partkey",
 ...     right_on="s_suppkey",
 ... ).select(["p_name", "p_brand", "s_name"]).collect()
->>> 
+>>>
 >>> print(joined_data)
 shape: (4, 3)
 ┌────────────┬────────────┬────────────┐
@@ -206,7 +206,7 @@ roapi_export.generate_config(TCPHCatalog, output_file="roapi-config.yaml")
 
 ## About Neuralink
 
-Neuralake is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology. 
+Neuralake is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology.
 
 Neuralink is creating a generalized brain interface to restore autonomy to those with unmet medical needs today, and to unlock human potential tomorrow.
 

@@ -17,12 +17,12 @@ frame4 = pl.LazyFrame({"z": ["1", "2", "3"], "implant_id": [1, 2, 3]})
 
 @table
 def new_table() -> NlkDataFrame:
-    return NlkDataFrame(frame=frame1)
+    return frame1
 
 
 @table
 def new_table_2() -> NlkDataFrame:
-    return NlkDataFrame(frame=frame2)
+    return frame2
 
 
 def not_a_table(a) -> int:
@@ -31,7 +31,7 @@ def not_a_table(a) -> int:
 
 @table(is_deprecated=True)
 def deprecated_table() -> NlkDataFrame:
-    return NlkDataFrame(frame=frame1)
+    return frame1
 
 
 my_parquet_table = ParquetTable(

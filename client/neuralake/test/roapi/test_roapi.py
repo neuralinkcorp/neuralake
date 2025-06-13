@@ -1,6 +1,5 @@
 import unittest
 
-import polars as pl
 import pyarrow as pa
 
 from neuralake.core import (
@@ -20,7 +19,7 @@ from neuralake.test.roapi.data import database
 
 @table
 def new_table() -> NlkDataFrame:
-    return NlkDataFrame(frame=pl.LazyFrame({"a": [1, 2, 3], "b": [2, 4, 6]}))
+    return NlkDataFrame({"a": [1, 2, 3], "b": [2, 4, 6]})
 
 
 parquet = ParquetTable(

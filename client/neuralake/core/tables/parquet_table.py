@@ -211,7 +211,7 @@ class ParquetTable(TableProtocol):
         if columns:
             df = df.select(columns)
 
-        return NlkDataFrame(frame=df)
+        return df
 
     def build_file_fragment(self, filters: list[Filter]) -> str:
         """
