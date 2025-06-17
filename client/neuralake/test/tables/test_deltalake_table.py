@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import Any
 from unittest.mock import MagicMock, patch
@@ -9,7 +8,6 @@ import pyarrow as pa
 import pytest
 
 from neuralake.core.tables.deltalake_table import (
-    DeltaCacheOptions,
     DeltalakeTable,
     Filter,
     fetch_df_by_partition,

@@ -12,6 +12,7 @@ from deltalake import DeltaTable, QueryBuilder
 from deltalake.warnings import ExperimentalWarning
 import polars as pl
 import pyarrow as pa
+from pypika import Query
 
 from neuralake.core.dataframe import NlkDataFrame
 from neuralake.core.tables.filters import InputFilters, normalize_filters
@@ -23,6 +24,7 @@ from neuralake.core.tables.metadata import (
 from neuralake.core.tables.util import (
     DeltaRoapiOptions,
     Filter,
+    RawCriterion,
     RoapiOptions,
     filters_to_sql_predicate,
     get_storage_options,
@@ -159,8 +161,6 @@ class DeltalakeTable(TableProtocol):
         # Use schema defined on this table, the physical schema in deltalake metadata might be different
         schema = self.schema
 
-        predicate_str = datafusion_predicate_from_filters(schema, filters)
-
         # These should not be read because they don't exist in the delta table
         extra_col_exprs = [expr for expr, _ in self.extra_cols]
         extra_column_names = set(expr.meta.output_name() for expr in extra_col_exprs)
@@ -172,18 +172,20 @@ class DeltalakeTable(TableProtocol):
                 (set(columns) | unique_column_names) - extra_column_names
             )
 
-        # TODO(peter): consider a sql builder for more complex queries?
-        select_cols = (
-            ", ".join([f'"{col}"' for col in columns_to_read])
-            if columns_to_read
-            else "*"
-        )
-        condition = f"WHERE {predicate_str}" if predicate_str else ""
-        query_string = f"""
-            SELECT {select_cols}
-            FROM "{self.name}"
-            {condition}
-        """
+        select_cols = columns_to_read or ["*"]
+
+        query = Query.from_(self.name).select(*select_cols)
+
+        if filters:
+            if isinstance(filters, str):
+                criterion = RawCriterion(filters)
+            else:
+                normalized_filters = normalize_filters(filters)
+                criterion = filters_to_sql_predicate(schema, normalized_filters)
+            query = query.where(criterion)
+
+        query_string = str(query)
+
         with warnings.catch_warnings():
             # Ignore ExperimentalWarning emitted from QueryBuilder
             warnings.filterwarnings("ignore", category=ExperimentalWarning)
@@ -324,15 +326,3 @@ def _normalize_df(
         .cast(polars_schema)
         .select(schema_columns)
     )
-
-
-def datafusion_predicate_from_filters(
-    schema: pa.Schema, filters: DeltaInputFilters | None
-) -> str | None:
-    if not filters:
-        return None
-    elif isinstance(filters, str):
-        return filters
-
-    normalized_filters = normalize_filters(filters)
-    return filters_to_sql_predicate(schema, normalized_filters)
