@@ -29,13 +29,11 @@ jobs:
     - name: Install dependencies
       run: |
         python3.10 -m pip install --upgrade pip
-        cd client
         python3.10 -m pip install --no-cache-dir -e ".[dev]"
     
     - name: Run tests with coverage
       run: |
-        cd client
-        pytest ../test --cov=neuralake --cov-report=term-missing
+        pytest test --cov=client/neuralake --cov-report=term-missing
 
   code-quality:
     runs-on: ubuntu-latest
@@ -50,24 +48,20 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        cd client
         pip install -e ".[dev]"
     
     - name: Run flake8
       run: |
-        cd client
-        flake8 neuralake --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 neuralake --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 client/neuralake --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 client/neuralake --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
     - name: Run black
       run: |
-        cd client
-        black --check neuralake
+        black --check client/neuralake
     
     - name: Run mypy
       run: |
-        cd client
-        #mypy neuralake
+        #mypy client/neuralake
 
   build-and-publish:
     needs: [run-tests, code-quality]
@@ -90,7 +84,6 @@ jobs:
       - name: Check if version exists in PyPI
         id: version_check
         run: |
-          cd client
           CURRENT_VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
           echo "Checking if version $CURRENT_VERSION exists in PyPI"
           if pip index versions neuralake | grep -q "$CURRENT_VERSION"; then
@@ -106,7 +99,6 @@ jobs:
       - name: Build package
         if: steps.version_check.outputs.should_build == 'true'
         run: |
-          cd client
           python -m build
       
       - name: Publish package to PyPI
@@ -114,7 +106,6 @@ jobs:
         env:
           TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
         run: |
-          cd client
           echo "TWINE_PASSWORD is set: $([ ! -z "$TWINE_PASSWORD" ] && echo "yes" || echo "no")"
           python -m twine upload --username __token__ --password "$TWINE_PASSWORD" dist/* --verbose
 
@@ -143,9 +134,8 @@ jobs:
       
       - name: Build web catalog
         run: |
-          cd client
           pip install -e .
-          cd ../docs/examples/
+          cd docs/examples/
           mkdir web_catalog
           python generate_tcph_site.py --output-dir web_catalog
 

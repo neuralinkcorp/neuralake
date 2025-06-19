@@ -7,9 +7,9 @@ import pytest
 
 from neuralake.core import ModuleDatabase
 from neuralake.core.catalog import Catalog
-from neuralake.test.data import database, database2
-from neuralake.test.data.database2 import frame3
-from neuralake.test.data.database import frame1, frame2
+from test.data import database, database2
+from test.data.database2 import frame3
+from test.data.database import frame1, frame2
 
 
 class TestCore(unittest.TestCase):

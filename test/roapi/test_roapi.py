@@ -14,7 +14,7 @@ from neuralake.core import (
 )
 from neuralake.core.catalog import Catalog
 from neuralake.roapi_export import export_to_roapi_tables
-from neuralake.test.roapi.data import database
+from test.roapi.data import database
 
 
 @table
