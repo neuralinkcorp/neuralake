@@ -5,7 +5,7 @@ This NodeJS module creates a static site that may be exported by the Python cata
 The static site is compiled with [Vite](https://vite.dev/) into the `/precompiled` directory. The precompiled static site expects a JSON config, named `data.json` at the root directory.
 
 ## Development
-Ensure you have a JSON Neuralake catalog definition. This can be exported with `export_neuralake` in `web_export.py`. Then run the following command to generate the precompiled assets and copy over your data.json file.
+Ensure you have a JSON Neuralake catalog definition. This can be exported with `export_neuralake` in `web.py`. Then run the following command to generate the precompiled assets and copy over your data.json file.
 
 ### Using default port 8000
 npm run build-and-serve -- path/to/your/file.json

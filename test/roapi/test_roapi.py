@@ -13,7 +13,7 @@ from neuralake.core import (
     table,
 )
 from neuralake.core.catalog import Catalog
-from neuralake.roapi_export import export_to_roapi_tables
+from neuralake.export.roapi import export_to_roapi_tables
 from test.roapi.data import database
 
 

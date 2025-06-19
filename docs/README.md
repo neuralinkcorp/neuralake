@@ -182,7 +182,7 @@ You can export your catalog to a static site with a single command:
 
 ```python
 # export.py
-from neuralake.web_export import export_and_generate_site
+from neuralake.export.web import export_and_generate_site
 from tcph_catalog import TCPHCatalog
 
 # Export and generate the site
@@ -197,11 +197,11 @@ export_and_generate_site(
 You can also generate a YAML configuration for [ROAPI](https://github.com/roapi/roapi):
 
 ```python
-from neuralake import roapi_export
+from neuralake.export import roapi
 from tcph_catalog import TCPHCatalog
 
 # Generate ROAPI config
-roapi_export.generate_config(TCPHCatalog, output_file="roapi-config.yaml")
+roapi.generate_config(TCPHCatalog, output_file="roapi-config.yaml")
 ```
 
 ## About Neuralink
