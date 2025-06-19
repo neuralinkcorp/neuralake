@@ -35,7 +35,7 @@ jobs:
     - name: Run tests with coverage
       run: |
         cd client
-        pytest neuralake/test --cov=neuralake --cov-report=term-missing
+        pytest ../test --cov=neuralake --cov-report=term-missing
 
   code-quality:
     runs-on: ubuntu-latest

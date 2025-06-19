@@ -45,7 +45,6 @@ include = [
     "../docs/README.md",
 ]
 exclude = [
-    "test/**/*",
     "neuralake/export/static_site/node_modules/**/*",
 ]
 
@@ -55,7 +54,6 @@ include = [
     "../docs/README.md",
 ]
 exclude = [
-    "test/**/*",
     "neuralake/export/static_site/node_modules/**/*",
 ]
 
