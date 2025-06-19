@@ -1,6 +1,4 @@
-from typing import Any, Literal, Sequence, cast
-
-from typing_extensions import NamedTuple
+from typing import Any, Literal, Sequence, cast, NamedTuple
 
 FilterOperator = Literal[
     "=",
