@@ -16,7 +16,7 @@ Neuralake is a simple query interface for multimodal data at any scale.
 
 With Neuralake, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!
 
-The Neuralake client has native, declarative connectors to [Delta Lake](https://delta.io/) and [Parquet](https://parquet.apache.org/) stores. Neuralake also supports defining tables via custom Python functions, so you can connect to any data source!
+The Neuralake catalog has native, declarative connectors to [Delta Lake](https://delta.io/) and [Parquet](https://parquet.apache.org/) stores. Neuralake also supports defining tables via custom Python functions, so you can connect to any data source!
 
 Here's an example catalog:
 

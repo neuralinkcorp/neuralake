@@ -33,7 +33,7 @@ jobs:
     
     - name: Run tests with coverage
       run: |
-        pytest test --cov=client/neuralake --cov-report=term-missing
+        pytest test --cov=src/neuralake --cov-report=term-missing
 
   code-quality:
     runs-on: ubuntu-latest
@@ -52,16 +52,16 @@ jobs:
     
     - name: Run flake8
       run: |
-        flake8 client/neuralake --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 client/neuralake --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 src/neuralake --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 src/neuralake --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
     - name: Run black
       run: |
-        black --check client/neuralake
+        black --check src/neuralake
     
     - name: Run mypy
       run: |
-        #mypy client/neuralake
+        #mypy src/neuralake
 
   build-and-publish:
     needs: [run-tests, code-quality]

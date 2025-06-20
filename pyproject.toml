@@ -41,34 +41,34 @@ dev = [
 
 [tool.hatch.build]
 include = [
-    "client/neuralake/**/*",
+    "src/neuralake/**/*",
     "docs/README.md",
 ]
 exclude = [
-    "client/neuralake/export/static_site/node_modules/**/*",
+    "src/neuralake/export/static_site/node_modules/**/*",
 ]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "client/neuralake/**/*",
+    "src/neuralake/**/*",
     "docs/README.md",
 ]
 exclude = [
-    "client/neuralake/export/static_site/node_modules/**/*",
+    "src/neuralake/export/static_site/node_modules/**/*",
 ]
 
 [tool.hatch.build.hooks.custom]
-path = "client/neuralake/export/static_site/build.py"
+path = "src/neuralake/export/static_site/build.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["client/neuralake"]
-only-include = ["client/neuralake"]
+packages = ["src/neuralake"]
+only-include = ["src/neuralake"]
 include = [
-    "client/neuralake/**/*",
+    "src/neuralake/**/*",
     "docs/README.md",
 ]
 exclude = [
-    "client/neuralake/export/static_site/node_modules/**/*",
+    "src/neuralake/export/static_site/node_modules/**/*",
 ]
 metadata-version = "2.1"
 
