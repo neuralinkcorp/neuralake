@@ -25,6 +25,7 @@ dependencies = [
     "pyarrow==17.0.0",
     "ipython==8.5.0",
     "typing_extensions==4.13.2",
+    "pypika>=0.48.0",
 ]
 
 [project.optional-dependencies]

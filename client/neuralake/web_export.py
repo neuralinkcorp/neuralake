@@ -2,14 +2,10 @@ from neuralake.core.catalog.catalog import Catalog, Database
 from neuralake.core.tables.deltalake_table import DeltalakeTable
 from neuralake.core.tables.metadata import TableProtocol
 import json
-import tempfile
-import subprocess
 from pathlib import Path
-import os
 import sys
 import logging
 import shutil
-import importlib.resources
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(message)s", stream=sys.stderr)
@@ -89,7 +85,7 @@ def export_and_generate_site(
     logger.info(f"Copying precompiled directory {precompiled_dir} to {output_path}")
     if not precompiled_dir.exists():
         raise FileNotFoundError(
-            f"Could not find precompiled directory. Make sure you're running from the project root or the package is properly installed."
+            "Could not find precompiled directory. Make sure you're running from the project root or the package is properly installed."
         )
 
     shutil.copytree(precompiled_dir, output_path, dirs_exist_ok=True)

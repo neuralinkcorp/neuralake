@@ -5,6 +5,7 @@ from typing import Any, NamedTuple, Optional
 import boto3
 import polars as pl
 import pyarrow as pa
+from pypika import Field, CustomFunction, Criterion
 
 from neuralake.core.tables.filters import Filter, NormalizedFilters
 
@@ -108,48 +109,52 @@ def get_pyarrow_filesystem_args(
     return pyarrow_filesystem_args
 
 
-def filters_to_sql_predicate(schema: pa.Schema, filters: NormalizedFilters) -> str:
-    if not filters:
-        return "true"
+class RawCriterion(Criterion):
+    def __init__(self, expr: str) -> None:
+        super().__init__()
+        self.expr = expr
 
-    return " or ".join(
+    def get_sql(self, **kwargs: Any) -> str:
+        return self.expr
+
+
+def filters_to_sql_predicate(
+    schema: pa.Schema, filters: NormalizedFilters
+) -> Criterion:
+    return Criterion.any(
         filters_to_sql_conjunction(schema, filter_set) for filter_set in filters
     )
 
 
-def filters_to_sql_conjunction(schema: pa.Schema, filters: list[Filter]) -> str:
-    if not filters:
-        return "true"
-
-    exprs = (filter_to_sql_expr(schema, f) for f in filters)
-    conjunction_expr = " and ".join(exprs)
-    return f"({conjunction_expr})"
+def filters_to_sql_conjunction(schema: pa.Schema, filters: list[Filter]) -> Criterion:
+    return Criterion.all(filter_to_sql_expr(schema, f) for f in filters)
 
 
-def filter_to_sql_expr(schema: pa.Schema, f: Filter) -> str:
+def filter_to_sql_expr(schema: pa.Schema, f: Filter) -> Criterion:
     column = f.column
     if column not in schema.names:
         raise ValueError(f"Invalid column name {column}")
 
     column_type = schema.field(column).type
-    if f.operator in (
-        "=",
-        "!=",
-        "<",
-        "<=",
-        ">",
-        ">=",
-        "in",
-        "not in",
-    ):
-        value_str = value_to_sql_expr(f.value, column_type)
-        return f"({column} {f.operator} {value_str})"
-
+    if f.operator == "=":
+        return Field(column) == f.value
+    elif f.operator == "!=":
+        return Field(column) != f.value
+    elif f.operator == "<":
+        return Field(column) < f.value
+    elif f.operator == "<=":
+        return Field(column) <= f.value
+    elif f.operator == ">":
+        return Field(column) > f.value
+    elif f.operator == ">=":
+        return Field(column) >= f.value
+    elif f.operator == "in":
+        return Field(column).isin(f.value)
+    elif f.operator == "not in":
+        return Field(column).notin(f.value)
     elif f.operator == "contains":
         assert isinstance(f.value, str)
-        escaped_str = escape_str_for_sql(f.value)
-        like_str = f"'%{escaped_str}%'"
-        return f"({column} like {like_str})"
+        return Field(column).like(f"%{f.value}%")
 
     elif f.operator in ("includes", "includes any", "includes all"):
         assert pa.types.is_list(column_type) or pa.types.is_large_list(column_type)
@@ -160,37 +165,18 @@ def filter_to_sql_expr(schema: pa.Schema, f: Filter) -> str:
         else:
             assert isinstance(f.value, list | tuple)
             values = list(f.value)
+            assert values
 
         # NOTE: for includes any/all, we join multiple array_contains with or/and
-        value_exprs = (
-            value_to_sql_expr(value, column_type.value_type) for value in values
+        array_contains = CustomFunction("array_contains", ["table", "value"])
+        include_exprs = [array_contains(Field(column), value) for value in values]
+        final_expr = (
+            Criterion.all(include_exprs)
+            if f.operator == "includes all"
+            else Criterion.any(include_exprs)
         )
-        include_exprs = (
-            f"array_contains({column}, {value_expr})" for value_expr in value_exprs
-        )
-        join_operator = " or " if f.operator == "includes any" else " and "
-        conjunction_expr = join_operator.join(include_exprs)
 
-        return f"({conjunction_expr})"
+        return final_expr
 
     else:
         raise ValueError(f"Invalid operator {f.operator}")
-
-
-def value_to_sql_expr(value: Any, value_type: pa.DataType) -> str:
-    if isinstance(value, list | tuple):
-        elements_str = ", ".join(
-            value_to_sql_expr(element, value_type) for element in value
-        )
-        value_str = f"({elements_str})"
-    else:
-        value_str = str(value)
-        # Escape the string so the user doesn't need to filter like ("col", "=", "'value'")
-        if pa.types.is_string(value_type):
-            escaped_str = escape_str_for_sql(value_str)
-            value_str = f"'{escaped_str}'"
-    return value_str
-
-
-def escape_str_for_sql(value: str) -> str:
-    return value.replace("'", "''")
