@@ -78,6 +78,9 @@ allow-direct-references = true
 [tool.pytest.ini_options]
 pythonpath = ["."]
 
+[project.scripts]
+neuralake-shell = "neuralake:repl"
+
 [project.urls]
 Homepage = "https://github.com/neuralinkcorp/neuralake"
 Issues = "https://github.com/neuralinkcorp/neuralake/issues"

@@ -204,6 +204,28 @@ from tcph_catalog import TCPHCatalog
 roapi.generate_config(TCPHCatalog, output_file="roapi-config.yaml")
 ```
 
+### Interactive shell
+
+Neuralake provides an interactive shell for quick data exploration and testing. After installing the package, you can start the shell with:
+
+```bash
+neuralake-shell
+```
+
+The shell comes pre-loaded with essential Neuralake imports and provides an IPython environment for interactive data analysis:
+
+```python
+Welcome to
+     __                     _       _
+  /\ \ \___ _   _ _ __ __ _| | __ _| | _____
+ /  \/ / _ \ | | | '__/ _` | |/ _` | |/ / _ \
+/ /\  /  __/ |_| | | | (_| | | (_| |   <  __/
+\_\ \/ \___|\__,_|_|  \__,_|_|\__,_|_|\_\___|
+
+In [1]: 
+In [2]: 
+```
+
 ## About Neuralink
 
 Neuralake is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology.
