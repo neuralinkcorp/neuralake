@@ -137,7 +137,7 @@ jobs:
           pip install -e .
           cd docs/examples/
           mkdir web_catalog
-          python generate_tcph_site.py --output-dir web_catalog
+          python generate_tpc_site.py --output-dir web_catalog
 
       - name: Build documentation
         run: |
