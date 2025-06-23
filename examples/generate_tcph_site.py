@@ -11,7 +11,7 @@ from unittest.mock import patch
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-from neuralake.web_export import export_and_generate_site
+from neuralake.export.web import export_and_generate_site
 from examples.tcph_catalog import TPCHCatalog
 from neuralake.core.tables import TableSchema
 

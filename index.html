@@ -355,7 +355,7 @@
 <h1 id="neuralake-a-simple-platform-for-complex-data">Neuralake: A simple platform for complex data<a class="headerlink" href="#neuralake-a-simple-platform-for-complex-data" title="Permanent link">&para;</a></h1>
 <p>Neuralake is a simple query interface for multimodal data at any scale.</p>
 <p>With Neuralake, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!</p>
-<p>The Neuralake client has native, declarative connectors to <a href="https://delta.io/">Delta Lake</a> and <a href="https://parquet.apache.org/">Parquet</a> stores. Neuralake also supports defining tables via custom Python functions, so you can connect to any data source!</p>
+<p>The Neuralake catalog has native, declarative connectors to <a href="https://delta.io/">Delta Lake</a> and <a href="https://parquet.apache.org/">Parquet</a> stores. Neuralake also supports defining tables via custom Python functions, so you can connect to any data source!</p>
 <p>Here's an example catalog:</p>
 <div class="github-only">
     <img src="images/catalog.png" />
@@ -514,7 +514,7 @@
 <h3 id="generate-a-static-site-catalog">Generate a static site catalog<a class="headerlink" href="#generate-a-static-site-catalog" title="Permanent link">&para;</a></h3>
 <p>You can export your catalog to a static site with a single command:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># export.py</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.web_export</span><span class="w"> </span><span class="kn">import</span> <span class="n">export_and_generate_site</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.export.web</span><span class="w"> </span><span class="kn">import</span> <span class="n">export_and_generate_site</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tcph_catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">TCPHCatalog</span>
 
 <span class="c1"># Export and generate the site</span>
@@ -524,11 +524,11 @@
 </code></pre></div>
 <h3 id="generate-an-api">Generate an API<a class="headerlink" href="#generate-an-api" title="Permanent link">&para;</a></h3>
 <p>You can also generate a YAML configuration for <a href="https://github.com/roapi/roapi">ROAPI</a>:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake</span><span class="w"> </span><span class="kn">import</span> <span class="n">roapi_export</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.export</span><span class="w"> </span><span class="kn">import</span> <span class="n">roapi</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tcph_catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">TCPHCatalog</span>
 
 <span class="c1"># Generate ROAPI config</span>
-<span class="n">roapi_export</span><span class="o">.</span><span class="n">generate_config</span><span class="p">(</span><span class="n">TCPHCatalog</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;roapi-config.yaml&quot;</span><span class="p">)</span>
+<span class="n">roapi</span><span class="o">.</span><span class="n">generate_config</span><span class="p">(</span><span class="n">TCPHCatalog</span><span class="p">,</span> <span class="n">output_file</span><span class="o">=</span><span class="s2">&quot;roapi-config.yaml&quot;</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="about-neuralink">About Neuralink<a class="headerlink" href="#about-neuralink" title="Permanent link">&para;</a></h2>
 <p>Neuralake is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology.</p>
