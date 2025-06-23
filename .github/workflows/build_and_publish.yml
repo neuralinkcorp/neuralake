@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - deploy-gh-pages
   pull_request:
     branches:
       - main
@@ -110,7 +111,6 @@ jobs:
           python -m twine upload --username __token__ --password "$TWINE_PASSWORD" dist/* --verbose
 
   build-and-publish-docs:
-    if: github.ref == 'refs/heads/main' || github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: write
