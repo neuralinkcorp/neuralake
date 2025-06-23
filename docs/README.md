@@ -54,7 +54,7 @@ pip install neuralake
 
 ### Create a table and catalog
 
-First, create a module to define your tables (e.g., `my_tables.py`):
+First, create a module to define your tables (e.g., `tcph_tables.py`):
 
 ```python
 # tcph_tables.py
@@ -132,17 +132,17 @@ def supplier() -> NlkDataFrame:
 ```python
 # tcph_catalog.py
 from neuralake.core import Catalog, ModuleDatabase
-import my_tables
+import tcph_tables
 
 # Create a catalog
-dbs = {"tpc-h": ModuleDatabase(my_tables)}
+dbs = {"tpc-h": ModuleDatabase(tcph_tables)}
 TCPHCatalog = Catalog(dbs)
 ```
 
 ### Query the data
 
 ```python
->>> from my_catalog import TCPHCatalog
+>>> from tcph_catalog import TCPHCatalog
 >>> from neuralake.core import Filter
 >>>
 >>> # Get part and supplier information

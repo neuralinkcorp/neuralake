@@ -11,24 +11,23 @@ def repl():
     """
 
     import IPython
-    from neuralake_catalogs import NlkCatalog
     import polars as pl
 
     from neuralake.core import Catalog, Filter, NlkDataFrame
 
     print(
-        """
+        r"""
 ------------------------------------------------
 
 Welcome to
      __                     _       _
   /\ \ \___ _   _ _ __ __ _| | __ _| | _____
- /  \/ / _ \ | | | '__/ _` | |/ _` | |/ / _ \\
+ /  \/ / _ \ | | | '__/ _` | |/ _` | |/ / _ \
 / /\  /  __/ |_| | | | (_| | | (_| |   <  __/
 \_\ \/ \___|\__,_|_|  \__,_|_|\__,_|_|\_\___|
 ------------------------------------------------
 
-"""  # noqa
+"""
     )
 
     IPython.start_ipython(
@@ -38,7 +37,6 @@ Welcome to
             "Catalog": Catalog,
             "NlkDataFrame": NlkDataFrame,
             "Filter": Filter,
-            "NlkCatalog": NlkCatalog,
             "pl": pl,
         },
         argv=[],
