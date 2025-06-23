@@ -13,14 +13,24 @@ export default function DatabaseKeyPage () {
 
   if (!database) {
     return (
-      <Flex justify='center' flexGrow='1' p='5'>
+      <Flex 
+        justify='center' 
+        flexGrow='1' 
+        p='5'
+        className='responsive-container'
+      >
         <Text color='gray'>No database selected.</Text>
       </Flex>
     )
   }
 
   return (
-    <>
+    <Flex 
+      flexGrow='1' 
+      flexBasis='0%'
+      overflow='hidden'
+    >
+      {/* Desktop Sidebar - Completely hidden on mobile */}
       <Sidebar
         eyebrow={database.name}
         heading='Tables'
@@ -41,9 +51,20 @@ export default function DatabaseKeyPage () {
         }}
       />
 
-      <Separator orientation='vertical' size='4' />
+      <Separator 
+        orientation='vertical'
+        size='4' 
+        className='desktop-only'
+      />
 
-      <Outlet />
-    </>
+      {/* Content takes full width on mobile */}
+      <Flex 
+        flexGrow='1' 
+        flexBasis='0%' 
+        overflow='hidden'
+      >
+        <Outlet />
+      </Flex>
+    </Flex>
   )
 }

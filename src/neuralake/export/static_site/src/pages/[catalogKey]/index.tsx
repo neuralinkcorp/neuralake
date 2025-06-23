@@ -13,7 +13,12 @@ export default function CatalogKeyPage () {
   if (!catalog) return null
 
   return (
-    <Flex flexGrow='1' flexBasis='0%' overflow='hidden'>
+    <Flex 
+      flexGrow='1' 
+      flexBasis='0%' 
+      overflow='hidden'
+    >
+      {/* Desktop Sidebar - Completely hidden on mobile */}
       <Sidebar
         eyebrow={catalog.name}
         heading='Databases'
@@ -33,9 +38,20 @@ export default function CatalogKeyPage () {
         }}
       />
 
-      <Separator orientation='vertical' size='4' />
+      <Separator 
+        orientation='vertical'
+        size='4' 
+        className='desktop-only'
+      />
 
-      <Outlet />
+      {/* Content takes full width on mobile */}
+      <Flex 
+        flexGrow='1' 
+        flexBasis='0%' 
+        overflow='hidden'
+      >
+        <Outlet />
+      </Flex>
     </Flex>
   )
 }

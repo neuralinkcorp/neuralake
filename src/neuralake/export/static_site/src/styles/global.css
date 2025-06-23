@@ -1,3 +1,190 @@
 body {
-  margin: 0
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Prevent body scroll when mobile menu is open */
+body.mobile-menu-open {
+  overflow: hidden;
+}
+
+/* Mobile-first responsive design utilities */
+.mobile-only {
+  display: block;
+}
+
+.desktop-only {
+  display: none;
+}
+
+/* Better touch targets for mobile */
+button, 
+.rt-Button, 
+.rt-Select-trigger {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Responsive containers */
+.responsive-container {
+  width: 100%;
+  max-width: none;
+  padding: 0 var(--space-3);
+}
+
+/* Better text scaling on mobile */
+@media (max-width: 767px) {
+  .rt-Heading {
+    font-size: clamp(1rem, 4vw, 2rem) !important;
+  }
+  
+  .rt-Text {
+    font-size: clamp(0.875rem, 3.5vw, 1rem) !important;
+  }
+}
+
+/* Tablet and Desktop styles */
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none !important;
+  }
+  
+  .desktop-only {
+    display: flex !important;
+  }
+  
+  .responsive-container {
+    padding: 0 var(--space-4);
+  }
+}
+
+/* Large desktop styles */
+@media (min-width: 1024px) {
+  .responsive-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* Mobile layout utilities - consistent breakpoint at 767px */
+@media (max-width: 767px) {
+  /* Ensure mobile-only elements show and desktop-only elements hide */
+  .mobile-only {
+    display: block !important;
+  }
+  
+  .desktop-only {
+    display: none !important;
+  }
+  
+  .mobile-stack {
+    flex-direction: column !important;
+  }
+  
+  .mobile-full-width {
+    width: 100% !important;
+    flex: 1 !important;
+  }
+  
+  .mobile-hidden {
+    display: none !important;
+  }
+  
+  .mobile-text-center {
+    text-align: center !important;
+  }
+  
+  /* Ensure content takes full width when sidebars are hidden */
+  .rt-Flex[data-orientation="horizontal"] > * {
+    flex: 1 !important;
+  }
+  
+  /* Better mobile scrolling */
+  .rt-ScrollArea-viewport {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Mobile-friendly data lists */
+  .rt-DataList-root {
+    gap: var(--space-3) !important;
+  }
+  
+  .rt-DataList-item {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: var(--space-2) !important;
+    padding: var(--space-3) !important;
+    border-radius: var(--radius-3) !important;
+    background-color: var(--gray-a2) !important;
+  }
+  
+  .rt-DataList-label {
+    margin-bottom: var(--space-1) !important;
+  }
+  
+  /* Better mobile tabs */
+  .rt-Tabs-list {
+    flex-wrap: wrap !important;
+    gap: var(--space-2) !important;
+  }
+  
+  .rt-Tabs-trigger {
+    flex: 1 !important;
+    min-height: 44px !important;
+  }
+  
+  /* Mobile-friendly badges */
+  .rt-Badge {
+    font-size: var(--font-size-1) !important;
+    padding: var(--space-1) var(--space-2) !important;
+  }
+  
+  /* Improve mobile select dropdowns */
+  .rt-Select-trigger {
+    font-size: var(--font-size-3) !important;
+    padding: var(--space-2) var(--space-3) !important;
+  }
+  
+  /* Better mobile popover positioning */
+  .rt-Popover-content {
+    max-width: 95vw !important;
+    margin: 0 var(--space-2) !important;
+  }
+}
+
+/* Mobile Menu Specific Styles */
+.mobile-menu-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.mobile-menu-panel {
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ensure mobile menu appears above everything */
+.mobile-menu-container {
+  z-index: 9999 !important;
+}
+
+/* Smooth transitions for mobile interactions */
+@media (max-width: 767px) {
+  .rt-Button,
+  .rt-IconButton {
+    transition: background-color 0.2s ease, transform 0.1s ease;
+  }
+  
+  .rt-Button:active,
+  .rt-IconButton:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Ensure mobile menu only shows on mobile screens */
+@media (min-width: 768px) {
+  .mobile-menu-container {
+    display: none !important;
+  }
 }

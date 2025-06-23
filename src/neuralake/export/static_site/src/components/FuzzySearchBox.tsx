@@ -13,8 +13,6 @@ import { IndexItem, indexByCatalog, searchSegmentedIndex } from '../lib/fuzzy-se
 import TextWithHighlights from './TextWithHighlights'
 import { useThrottle } from '../lib/useThrottle'
 
-const WIDTH = '600px'
-
 interface ResultProps {
   result: FuseResult<IndexItem>
 }
@@ -147,7 +145,7 @@ export function FuzzySearchBox ({ catalogKey, enableKeyboardShortcuts }: FuzzySe
   return (
     <Popover.Root open={results.length > 0}>
       <Popover.Trigger>
-        <Box width={WIDTH}>
+        <Box className={classes.searchContainer}>
           <TextField.Root
             value={query}
             onChange={(event) => setQuery(event.target.value)}
@@ -188,7 +186,7 @@ export function FuzzySearchBox ({ catalogKey, enableKeyboardShortcuts }: FuzzySe
       </Popover.Trigger>
 
       <Box mt='-1' asChild>
-        <Popover.Content ref={popupRef} width={WIDTH} size='1'>
+        <Popover.Content ref={popupRef} className={classes.popoverContent} size='1'>
           <Flex direction='column' gap='1'>
             {results.map((result, index) => (
               <button

@@ -16,7 +16,15 @@ export interface SidebarProps {
 
 export default function Sidebar ({ eyebrow, heading, items, value, onValueChange }: SidebarProps): ReactNode {
   return (
-    <Box width='250px' height='100%'>
+    <Box 
+      className='desktop-only'
+      width='250px'
+      height='100%'
+      style={{
+        minWidth: '200px',
+        maxWidth: '300px',
+      }}
+    >
       <ScrollArea>
         <Flex gap='3' p='2' pt='3' direction='column'>
           <Flex p='1' direction='column' gap='1'>
@@ -40,7 +48,7 @@ export default function Sidebar ({ eyebrow, heading, items, value, onValueChange
             {items.map((item) => (
               <RadioCards.Item key={item.value} value={item.value}>
                 <Box width='100%'>
-                  <Text>{item.label}</Text>
+                  <Text size='2'>{item.label}</Text>
                 </Box>
               </RadioCards.Item>
             ))}
