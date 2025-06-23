@@ -54,10 +54,10 @@ pip install neuralake
 
 ### Create a table and catalog
 
-First, create a module to define your tables (e.g., `tcph_tables.py`):
+First, create a module to define your tables (e.g., `tpch_tables.py`):
 
 ```python
-# tcph_tables.py
+# tpch_tables.py
 from neuralake.core import (
     DeltalakeTable,
     ParquetTable,
@@ -130,19 +130,19 @@ def supplier() -> NlkDataFrame:
 ```
 
 ```python
-# tcph_catalog.py
+# tpch_catalog.py
 from neuralake.core import Catalog, ModuleDatabase
-import tcph_tables
+import tpch_tables
 
 # Create a catalog
-dbs = {"tpc-h": ModuleDatabase(tcph_tables)}
-TCPHCatalog = Catalog(dbs)
+dbs = {"tpc-h": ModuleDatabase(tpch_tables)}
+TPCHCatalog = Catalog(dbs)
 ```
 
 ### Query the data
 
 ```python
->>> from tcph_catalog import TCPHCatalog
+>>> from tpch_catalog import TPCHCatalog
 >>> from neuralake.core import Filter
 >>>
 >>> # Get part and supplier information
@@ -183,11 +183,11 @@ You can export your catalog to a static site with a single command:
 ```python
 # export.py
 from neuralake.export.web import export_and_generate_site
-from tcph_catalog import TCPHCatalog
+from tpch_catalog import TPCHCatalog
 
 # Export and generate the site
 export_and_generate_site(
-    catalogs=[("tcph", TPCHCatalog)], output_dir=str(output_dir)
+    catalogs=[("tpch", TPCHCatalog)], output_dir=str(output_dir)
 )
 ```
 
@@ -198,10 +198,10 @@ You can also generate a YAML configuration for [ROAPI](https://github.com/roapi/
 
 ```python
 from neuralake.export import roapi
-from tcph_catalog import TCPHCatalog
+from tpch_catalog import TPCHCatalog
 
 # Generate ROAPI config
-roapi.generate_config(TCPHCatalog, output_file="roapi-config.yaml")
+roapi.generate_config(TPCHCatalog, output_file="roapi-config.yaml")
 ```
 
 ## About Neuralink

@@ -52,7 +52,7 @@ class FunctionTable(TableProtocol):
                     "name": key,
                     "type": type.__str__(),
                 }
-                for key, type in fallback_table.schema.items()
+                for key, type in fallback_table.collect_schema().items()
             ]
 
         return TableSchema(partitions=partitions, columns=columns)

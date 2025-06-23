@@ -109,7 +109,7 @@ A Neuralake database is a Python module that contains tables. There are two main
 A module database wraps a Python module containing table definitions:
 
 ```python
-# tcph_tables.py
+# tpch_tables.py
 from neuralake.core import table
 
 @table
@@ -124,9 +124,9 @@ def partsupp():
 
 # Using the database
 from neuralake.core import ModuleDatabase
-import tcph_tables
+import tpch_tables
 
-db = ModuleDatabase(tcph_tables)
+db = ModuleDatabase(tpch_tables)
 
 # Query data
 >>> df = db.supplier()
@@ -149,10 +149,10 @@ A catalog is a Python module that is a collection of databases.
 
 ```python
 from neuralake.core import Catalog, ModuleDatabase
-import tcph_tables
+import tpch_tables
 
 # Create a catalog
-dbs = {"tpc-h": ModuleDatabase(tcph_tables)}
+dbs = {"tpc-h": ModuleDatabase(tpch_tables)}
 TPCHCatalog = Catalog(dbs)
 
 # Query data across databases
