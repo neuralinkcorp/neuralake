@@ -397,7 +397,7 @@
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>neuralake
 </code></pre></div>
 <h3 id="create-a-table-and-catalog">Create a table and catalog<a class="headerlink" href="#create-a-table-and-catalog" title="Permanent link">&para;</a></h3>
-<p>First, create a module to define your tables (e.g., <code>my_tables.py</code>):</p>
+<p>First, create a module to define your tables (e.g., <code>tcph_tables.py</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># tcph_tables.py</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DeltalakeTable</span><span class="p">,</span>
@@ -470,14 +470,14 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># tcph_catalog.py</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">ModuleDatabase</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">my_tables</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tcph_tables</span>
 
 <span class="c1"># Create a catalog</span>
-<span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">my_tables</span><span class="p">)}</span>
+<span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">tcph_tables</span><span class="p">)}</span>
 <span class="n">TCPHCatalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="p">(</span><span class="n">dbs</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="query-the-data">Query the data<a class="headerlink" href="#query-the-data" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">my_catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">TCPHCatalog</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">tcph_catalog</span><span class="w"> </span><span class="kn">import</span> <span class="n">TCPHCatalog</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Filter</span>
 <span class="o">&gt;&gt;&gt;</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="c1"># Get part and supplier information</span>
