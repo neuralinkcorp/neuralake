@@ -84,7 +84,7 @@ def export_and_generate_site(
         json.dump(catalog_data, f)
 
     project_root = Path(__file__).parent
-    precompiled_dir = project_root / "export" / "static_site" / "precompiled"
+    precompiled_dir = project_root / "static_site" / "precompiled"
 
     logger.info(f"Copying precompiled directory {precompiled_dir} to {output_path}")
     if not precompiled_dir.exists():
