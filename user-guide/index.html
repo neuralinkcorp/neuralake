@@ -612,7 +612,7 @@
 <p>A Neuralake database is a Python module that contains tables. There are two main ways to create databases:</p>
 <h4 id="module-database">Module database<a class="headerlink" href="#module-database" title="Permanent link">&para;</a></h4>
 <p>A module database wraps a Python module containing table definitions:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># tcph_tables.py</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># tpch_tables.py</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">table</span>
 
 <span class="nd">@table</span>
@@ -627,9 +627,9 @@
 
 <span class="c1"># Using the database</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ModuleDatabase</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tcph_tables</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tpch_tables</span>
 
-<span class="n">db</span> <span class="o">=</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">tcph_tables</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">tpch_tables</span><span class="p">)</span>
 
 <span class="c1"># Query data</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">supplier</span><span class="p">()</span>
@@ -648,10 +648,10 @@
 <h3 id="catalogs">Catalogs<a class="headerlink" href="#catalogs" title="Permanent link">&para;</a></h3>
 <p>A catalog is a Python module that is a collection of databases.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">neuralake.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Catalog</span><span class="p">,</span> <span class="n">ModuleDatabase</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">tcph_tables</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tpch_tables</span>
 
 <span class="c1"># Create a catalog</span>
-<span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">tcph_tables</span><span class="p">)}</span>
+<span class="n">dbs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;tpc-h&quot;</span><span class="p">:</span> <span class="n">ModuleDatabase</span><span class="p">(</span><span class="n">tpch_tables</span><span class="p">)}</span>
 <span class="n">TPCHCatalog</span> <span class="o">=</span> <span class="n">Catalog</span><span class="p">(</span><span class="n">dbs</span><span class="p">)</span>
 
 <span class="c1"># Query data across databases</span>
