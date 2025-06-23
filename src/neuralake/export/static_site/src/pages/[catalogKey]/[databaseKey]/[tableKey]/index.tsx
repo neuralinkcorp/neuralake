@@ -9,16 +9,16 @@ import CodeBlock from '../../../../components/CodeBlock'
 import ArrowTypeView from '../../../../components/ArrowTypeView'
 import { InfoCircledIcon } from '@radix-ui/react-icons';
 
-export default function TableKeyPage () {
+export default function TableKeyPage() {
   const catalog = useRouteLoaderData('catalogKey') as ExportedCatalog
   const database = useRouteLoaderData('databaseKey') as ExportedDatabase
   const table = useRouteLoaderData('tableKey') as ExportedTable | undefined
 
   if (!table) {
     return (
-      <Flex 
-        justify='center' 
-        flexGrow='1' 
+      <Flex
+        justify='center'
+        flexGrow='1'
         p='5'
         className='responsive-container'
       >
@@ -38,19 +38,19 @@ export default function TableKeyPage () {
   return (
     <Flex flexGrow='1'>
       <ScrollArea>
-        <Container 
+        <Container
           size={{ initial: '1', sm: '2' }}
           className='responsive-container'
         >
-          <Flex 
-            p={{ initial: '3', sm: '4' }} 
-            gap={{ initial: '6', sm: '8' }} 
+          <Flex
+            p={{ initial: '3', sm: '4' }}
+            gap={{ initial: '6', sm: '8' }}
             direction='column'
           >
             <Flex direction='column' gap='5'>
-              <Flex 
-                direction={{ initial: 'column', sm: 'row' }} 
-                gap='2' 
+              <Flex
+                direction={{ initial: 'column', sm: 'row' }}
+                gap='2'
                 align={{ initial: 'start', sm: 'center' }}
               >
                 <Heading as='h2' size={{ initial: '6', sm: '7' }}>
@@ -60,8 +60,8 @@ export default function TableKeyPage () {
                   {table.table_type === 'DELTA_LAKE'
                     ? 'Delta Lake'
                     : table.table_type === 'PARQUET'
-                    ? 'Parquet'
-                    : 'Function'}
+                      ? 'Parquet'
+                      : 'Function'}
                 </Badge>
               </Flex>
 
@@ -77,8 +77,8 @@ export default function TableKeyPage () {
                   <Heading as='h3' size={{ initial: '3', sm: '4' }} color='gray'>
                     Data Source
                   </Heading>
-                  <Text 
-                    color='gray' 
+                  <Text
+                    color='gray'
                     size={{ initial: '2', sm: '3' }}
                     dangerouslySetInnerHTML={{ __html: cleanDataInput }}
                   />
@@ -90,7 +90,7 @@ export default function TableKeyPage () {
                   <Heading as='h3' size={{ initial: '3', sm: '4' }} color='gray'>
                     Latency
                   </Heading>
-                  <Text 
+                  <Text
                     color='gray'
                     size={{ initial: '2', sm: '3' }}
                   >
@@ -100,8 +100,8 @@ export default function TableKeyPage () {
               }
 
               {
-                table.example_notebook && <Link 
-                  href={table.example_notebook} 
+                table.example_notebook && <Link
+                  href={table.example_notebook}
                   target='_blank'
                   size={{ initial: '2', sm: '3' }}
                 >
@@ -109,54 +109,54 @@ export default function TableKeyPage () {
                 </Link>
               }
 
-            <Tabs.Root defaultValue="filter-list" key={table.name}>
-              <Tabs.List>
-                <Tabs.Trigger value="filter-list">List Filter</Tabs.Trigger>
-                {table.supports_sql_filter && (
-                  <Tabs.Trigger value="filter-sql">SQL Filter</Tabs.Trigger>
-                )}
-              </Tabs.List>
+              <Tabs.Root defaultValue={table.supports_sql_filter ? "filter-sql" : "filter-list"} key={table.name}>
+                <Tabs.List>
+                  {table.supports_sql_filter && (
+                    <Tabs.Trigger value="filter-sql">SQL Filter</Tabs.Trigger>
+                  )}
+                  <Tabs.Trigger value="filter-list">List Filter</Tabs.Trigger>
+                </Tabs.List>
 
-              <Box pt="3">
-                <Tabs.Content value="filter-list">
-                  <CodeBlock
-                    code={genTableCode({
-                      catalog,
-                      database,
-                      table,
-                      formatSqlFilter: false,
-                    })}
-                    lang='python'
-                  />
-                </Tabs.Content>
-
-                {table.supports_sql_filter && (
-                  <Tabs.Content value="filter-sql">
-                    <Callout.Root mb="3">
-                      <Callout.Icon>
-                        <InfoCircledIcon />
-                      </Callout.Icon>
-                      <Callout.Text size={{ initial: '1', sm: '2' }}>
-                        <Link href='https://datafusion.apache.org/user-guide/sql/index.html' target='_blank'>
-                          DataFusion SQL Reference
-                        </Link>
-                        <br />
-                        SQL filters are only supported for Delta Lake tables. Look for this "SQL Filter" section in the catalog to see what tables support SQL filtering.
-                      </Callout.Text>
-                    </Callout.Root>
+                <Box pt="3">
+                  <Tabs.Content value="filter-list">
                     <CodeBlock
                       code={genTableCode({
                         catalog,
                         database,
                         table,
-                        formatSqlFilter: true,
+                        formatSqlFilter: false,
                       })}
                       lang='python'
                     />
                   </Tabs.Content>
-                )}
-              </Box>
-            </Tabs.Root>
+
+                  {table.supports_sql_filter && (
+                    <Tabs.Content value="filter-sql">
+                      <Callout.Root mb="3">
+                        <Callout.Icon>
+                          <InfoCircledIcon />
+                        </Callout.Icon>
+                        <Callout.Text size={{ initial: '1', sm: '2' }}>
+                          <Link href='https://datafusion.apache.org/user-guide/sql/index.html' target='_blank'>
+                            DataFusion SQL Reference
+                          </Link>
+                          <br />
+                          SQL filters are only supported for Delta Lake tables.
+                        </Callout.Text>
+                      </Callout.Root>
+                      <CodeBlock
+                        code={genTableCode({
+                          catalog,
+                          database,
+                          table,
+                          formatSqlFilter: true,
+                        })}
+                        lang='python'
+                      />
+                    </Tabs.Content>
+                  )}
+                </Box>
+              </Tabs.Root>
 
             </Flex>
 
@@ -176,7 +176,7 @@ export default function TableKeyPage () {
                       </DataList.Label>
 
                       <DataList.Value>
-                        <Text 
+                        <Text
                           color='gray'
                           size={{ initial: '1', sm: '2' }}
                         >
@@ -185,12 +185,12 @@ export default function TableKeyPage () {
                       </DataList.Value>
                     </DataList.Item>
                   ))
-                  : <Text 
-                      color='gray'
-                      size={{ initial: '2', sm: '3' }}
-                    >
-                      This table is not partitioned.
-                    </Text>}
+                  : <Text
+                    color='gray'
+                    size={{ initial: '2', sm: '3' }}
+                  >
+                    This table is not partitioned.
+                  </Text>}
               </DataList.Root>
             </Flex>
 
@@ -204,7 +204,7 @@ export default function TableKeyPage () {
                   ? table.columns.map((column) => (
                     <DataList.Item key={column.name}>
                       <DataList.Label highContrast>
-                        <Flex 
+                        <Flex
                           direction={{ initial: 'column', sm: 'row' }}
                           gap='1'
                           align={{ initial: 'start', sm: 'center' }}
@@ -253,12 +253,12 @@ export default function TableKeyPage () {
                       </DataList.Value>
                     </DataList.Item>
                   ))
-                  : <Text 
-                      color='orange'
-                      size={{ initial: '2', sm: '3' }}
-                    >
-                      Failed to generate schema for this table. Is this table missing a <Code>docs_partition</Code>?
-                    </Text>}
+                  : <Text
+                    color='orange'
+                    size={{ initial: '2', sm: '3' }}
+                  >
+                    Failed to generate schema for this table. Is this table missing a <Code>docs_partition</Code>?
+                  </Text>}
               </DataList.Root>
             </Flex>
           </Flex>
