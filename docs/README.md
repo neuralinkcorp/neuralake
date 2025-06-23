@@ -4,8 +4,8 @@
     <br>
     <a href="https://neuralake.io">
         <img src="https://img.shields.io/badge/DOCS-blue?style=for-the-badge" alt="Documentation">
-    </a>
-    <a href="https://pypi.org/project/neuralake/">
+    </a><!--
+    --><a href="https://pypi.org/project/neuralake/">
         <img src="https://img.shields.io/pypi/v/neuralake?style=for-the-badge" alt="PyPI Version">
     </a>
 </div>
