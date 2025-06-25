@@ -1,6 +1,6 @@
 import polars as pl
 
-from neuralake.core import NlkDataFrame, table
+from datarepo.core import NlkDataFrame, table
 
 frame3 = pl.LazyFrame({"a": ["x", "y", "z"]})
 

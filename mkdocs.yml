@@ -1,7 +1,7 @@
-site_name: Neuralake
-site_url: https://neuralake.io
-repo_url: https://github.com/neuralinkcorp/neuralake/
-repo_name: neuralink/neuralake
+site_name: Datarepo
+site_url: https://datarepo.io
+repo_url: https://github.com/neuralinkcorp/datarepo/
+repo_name: neuralink/datarepo
 
 theme:
   name: material

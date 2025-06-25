@@ -8,7 +8,7 @@ import polars as pl
 import pyarrow as pa
 import pytest
 
-from neuralake.core.tables.deltalake_table import (
+from datarepo.core.tables.deltalake_table import (
     DeltaCacheOptions,
     DeltalakeTable,
     Filter,

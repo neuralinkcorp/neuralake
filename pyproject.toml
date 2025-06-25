@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "neuralake"
+name = "data-repo"
 version = "0.0.5"
 description = "A simple platform for complex data"
 readme = "docs/README.md"
@@ -41,34 +41,34 @@ dev = [
 
 [tool.hatch.build]
 include = [
-    "src/neuralake/**/*",
+    "src/datarepo/**/*",
     "docs/README.md",
 ]
 exclude = [
-    "src/neuralake/export/static_site/node_modules/**/*",
+    "src/datarepo/export/static_site/node_modules/**/*",
 ]
 
 [tool.hatch.build.targets.sdist]
 include = [
-    "src/neuralake/**/*",
+    "src/datarepo/**/*",
     "docs/README.md",
 ]
 exclude = [
-    "src/neuralake/export/static_site/node_modules/**/*",
+    "src/datarepo/export/static_site/node_modules/**/*",
 ]
 
 [tool.hatch.build.hooks.custom]
-path = "src/neuralake/export/static_site/build.py"
+path = "src/datarepo/export/static_site/build.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/neuralake"]
-only-include = ["src/neuralake"]
+packages = ["src/datarepo"]
+only-include = ["src/datarepo"]
 include = [
-    "src/neuralake/**/*",
+    "src/datarepo/**/*",
     "docs/README.md",
 ]
 exclude = [
-    "src/neuralake/export/static_site/node_modules/**/*",
+    "src/datarepo/export/static_site/node_modules/**/*",
 ]
 metadata-version = "2.1"
 
@@ -79,5 +79,5 @@ allow-direct-references = true
 pythonpath = ["."]
 
 [project.urls]
-Homepage = "https://github.com/neuralinkcorp/neuralake"
-Issues = "https://github.com/neuralinkcorp/neuralake/issues"
+Homepage = "https://github.com/neuralinkcorp/datarepo"
+Issues = "https://github.com/neuralinkcorp/datarepo/issues"

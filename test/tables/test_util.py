@@ -1,12 +1,12 @@
 import pyarrow as pa
 import pytest
 
-from neuralake.core.tables.filters import (
+from datarepo.core.tables.filters import (
     InputFilters,
     NormalizedFilters,
     normalize_filters,
 )
-from neuralake.core.tables.util import (
+from datarepo.core.tables.util import (
     Filter,
     filter_to_sql_expr,
     filters_to_sql_predicate,

@@ -4,13 +4,13 @@ from pathlib import Path
 import polars as pl
 import pytest
 
-from neuralake.core.tables.filters import (
+from datarepo.core.tables.filters import (
     Filter,
     InputFilters,
     NormalizedFilters,
 )
-from neuralake.core.tables.parquet_table import ParquetTable
-from neuralake.core.tables.util import Partition, PartitioningScheme
+from datarepo.core.tables.parquet_table import ParquetTable
+from datarepo.core.tables.util import Partition, PartitioningScheme
 
 
 @pytest.fixture
