@@ -31,7 +31,7 @@ export default function RootPage () {
             <MobileMenuButton onClick={() => setIsMobileMenuOpen(true)} />
             
             <Flex gap='3' align='center'>
-              <Heading as='h1' size='3'>Datarepo</Heading>
+              <Heading as='h1' size='3'>datarepo</Heading>
               
               <Select.Root
                 value={catalogKey}
@@ -63,7 +63,7 @@ export default function RootPage () {
         {/* Desktop Header - Original Structure */}
         <Flex px='3' align='center' gap='4' className='desktop-only'>
           <Flex flexGrow='1' py='2' gap='4' align='center'>
-            <Heading as='h1' size='3'>Datarepo</Heading>
+            <Heading as='h1' size='3'>datarepo</Heading>
 
             <Select.Root
               value={catalogKey}

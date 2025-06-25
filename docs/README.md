@@ -10,13 +10,13 @@
     </a>
 </div>
 
-# Datarepo: A simple platform for complex data
+# datarepo: a simple platform for complex data
 
-Datarepo is a simple query interface for multimodal data at any scale.
+`datarepo` is a simple query interface for multimodal data at any scale.
 
-With Datarepo, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!
+With `datarepo`, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!
 
-The Datarepo catalog has native, declarative connectors to [Delta Lake](https://delta.io/) and [Parquet](https://parquet.apache.org/) stores. Datarepo also supports defining tables via custom Python functions, so you can connect to any data source!
+The `datarepo` catalog has native, declarative connectors to [Delta Lake](https://delta.io/) and [Parquet](https://parquet.apache.org/) stores. `datarepo` also supports defining tables via custom Python functions, so you can connect to any data source!
 
 Here's an example catalog:
 
@@ -206,7 +206,7 @@ roapi.generate_config(TPCHCatalog, output_file="roapi-config.yaml")
 
 ## About Neuralink
 
-Datarepo is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology.
+`datarepo` is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology.
 
 Neuralink is creating a generalized brain interface to restore autonomy to those with unmet medical needs today, and to unlock human potential tomorrow.
 

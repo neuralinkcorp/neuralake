@@ -5,9 +5,9 @@ __all__ = ["NlkDataFrame", "Catalog"]
 
 def repl():
     """
-    Starts an interactive python session with some of the Datarepo imports.
-Allows for quick testing and inspection of data accessible via the Datarepo
-    client.
+        Starts an interactive python session with some of the datarepo imports.
+    Allows for quick testing and inspection of data accessible via the datarepo
+        client.
     """
 
     import IPython

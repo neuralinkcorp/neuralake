@@ -4,7 +4,7 @@
 
 ### Tables
 
-A table in Datarepo is a Python function that returns an `NlkDataFrame`. An `NlkDataFrame` is a thin wrapper of the [polars LazyFrame](https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html). Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by [DeltaLake](https://delta.io/) tables, [Parquet tables](https://parquet.apache.org/), or pure Python functions.
+A table in datarepo is a Python function that returns an `NlkDataFrame`. An `NlkDataFrame` is a thin wrapper of the [polars LazyFrame](https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html). Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by [DeltaLake](https://delta.io/) tables, [Parquet tables](https://parquet.apache.org/), or pure Python functions.
 
 #### Delta Lake tables
 ```python
@@ -103,7 +103,7 @@ def supplier() -> NlkDataFrame:
 
 ### Databases
 
-A Datarepo database is a Python module that contains tables. There are two main ways to create databases:
+A datarepo database is a Python module that contains tables. There are two main ways to create databases:
 
 #### Module database
 A module database wraps a Python module containing table definitions:
@@ -176,7 +176,7 @@ shape: (5, 12)
 
 ## Querying data
 
-Datarepo provides a consistent interface for querying data across all table types:
+datarepo provides a consistent interface for querying data across all table types:
 
 ```python
 # Filter data

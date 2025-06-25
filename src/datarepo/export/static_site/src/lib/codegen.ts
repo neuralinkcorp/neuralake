@@ -54,7 +54,7 @@ interface GenTableCodeOptions {
 
   /**
    * If true, the filters will be formatted as a SQL string.
-   * Otherwise, they will be formatted as a list of Datarepo `Filter` objects.
+   * Otherwise, they will be formatted as a list of datarepo `Filter` objects.
    */
   formatSqlFilter?: boolean;
 }
