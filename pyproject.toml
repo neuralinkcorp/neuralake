@@ -3,8 +3,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "data-repo"
-version = "0.0.5"
+name = "data-repository"
+version = "0.0.1"
 description = "A simple platform for complex data"
 readme = "docs/README.md"
 requires-python = ">=3.8"

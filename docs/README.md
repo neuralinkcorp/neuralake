@@ -49,7 +49,7 @@ Data engineering should be simple. That means:
 Install the latest version with:
 
 ```bash
-pip install data-repo
+pip install data-repository
 ```
 
 ### Create a table and catalog
