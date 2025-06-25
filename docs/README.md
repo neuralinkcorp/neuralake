@@ -2,7 +2,7 @@
 <div align="center" class="github-only">
     <img src="images/banner_black.png">
     <br>
-    <a href="https://datarepo.io">
+    <a href="https://data-repo.io">
         <img src="https://img.shields.io/badge/DOCS-blue?style=for-the-badge" alt="Documentation">
     </a>
     <a href="https://pypi.org/project/data-repo/">
