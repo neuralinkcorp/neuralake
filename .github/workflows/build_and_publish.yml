@@ -86,7 +86,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
           echo "Checking if version $CURRENT_VERSION exists in PyPI"
-          if pip index versions data-repo | grep -q "$CURRENT_VERSION"; then
+          if pip index versions data-repository | grep -q "$CURRENT_VERSION"; then
             echo "Version $CURRENT_VERSION already exists in PyPI"
             echo "should_build=false" >> $GITHUB_OUTPUT
             exit 0
