@@ -5,8 +5,8 @@
     <a href="https://data-repo.io">
         <img src="https://img.shields.io/badge/DOCS-blue?style=for-the-badge" alt="Documentation">
     </a>
-    <a href="https://pypi.org/project/data-repo/">
-        <img src="https://img.shields.io/pypi/v/data-repo?style=for-the-badge" alt="PyPI Version">
+    <a href="https://pypi.org/project/data-repository/">
+        <img src="https://img.shields.io/pypi/v/data-repository?style=for-the-badge" alt="PyPI Version">
     </a>
 </div>
 
