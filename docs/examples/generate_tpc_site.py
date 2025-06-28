@@ -11,9 +11,9 @@ from unittest.mock import patch
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-from neuralake.export.web import export_and_generate_site
+from datarepo.export.web import export_and_generate_site
 from examples.tpc_catalog import TPCCatalog
-from neuralake.core.tables import TableSchema
+from datarepo.core.tables import TableSchema
 
 
 def mock_get_schema(self):
@@ -743,9 +743,9 @@ def main():
 
     # Mock the get_schema method for both ParquetTable and DeltalakeTable
     with patch(
-        "neuralake.core.tables.parquet_table.ParquetTable.get_schema", mock_get_schema
+        "datarepo.core.tables.parquet_table.ParquetTable.get_schema", mock_get_schema
     ), patch(
-        "neuralake.core.tables.deltalake_table.DeltalakeTable.get_schema",
+        "datarepo.core.tables.deltalake_table.DeltalakeTable.get_schema",
         mock_get_schema,
     ):
         # Export and generate the site with the unified TPC catalog

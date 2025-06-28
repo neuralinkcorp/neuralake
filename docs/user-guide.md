@@ -4,11 +4,11 @@
 
 ### Tables
 
-A table in Neuralake is a Python function that returns an `NlkDataFrame`. An `NlkDataFrame` is a thin wrapper of the [polars LazyFrame](https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html). Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by [DeltaLake](https://delta.io/) tables, [Parquet tables](https://parquet.apache.org/), or pure Python functions.
+A table in datarepo is a Python function that returns an `NlkDataFrame`. An `NlkDataFrame` is a thin wrapper of the [polars LazyFrame](https://docs.pola.rs/py-polars/html/reference/lazyframe/index.html). Tables are the fundamental building blocks for accessing and querying data. Tables can be backed by [DeltaLake](https://delta.io/) tables, [Parquet tables](https://parquet.apache.org/), or pure Python functions.
 
 #### Delta Lake tables
 ```python
-from neuralake.core import DeltalakeTable
+from datarepo.core import DeltalakeTable
 import pyarrow as pa
 
 # Define the schema
@@ -48,7 +48,7 @@ part = DeltalakeTable(
 
 #### Parquet tables
 ```python
-from neuralake.core import ParquetTable, Partition, PartitioningScheme
+from datarepo.core import ParquetTable, Partition, PartitioningScheme
 import pyarrow as pa
 
 # Create the table
@@ -80,7 +80,7 @@ partsupp = ParquetTable(
 Function tables are created using the `@table` decorator and allow you to define custom data access logic:
 
 ```python
-from neuralake.core import table
+from datarepo.core import table
 import polars as pl
 
 @table(
@@ -103,14 +103,14 @@ def supplier() -> NlkDataFrame:
 
 ### Databases
 
-A Neuralake database is a Python module that contains tables. There are two main ways to create databases:
+A datarepo database is a Python module that contains tables. There are two main ways to create databases:
 
 #### Module database
 A module database wraps a Python module containing table definitions:
 
 ```python
 # tpch_tables.py
-from neuralake.core import table
+from datarepo.core import table
 
 @table
 def supplier():
@@ -123,7 +123,7 @@ def partsupp():
     return NlkDataFrame(...)
 
 # Using the database
-from neuralake.core import ModuleDatabase
+from datarepo.core import ModuleDatabase
 import tpch_tables
 
 db = ModuleDatabase(tpch_tables)
@@ -148,7 +148,7 @@ shape: (5, 7)
 A catalog is a Python module that is a collection of databases.
 
 ```python
-from neuralake.core import Catalog, ModuleDatabase
+from datarepo.core import Catalog, ModuleDatabase
 import tpch_tables
 
 # Create a catalog
@@ -176,7 +176,7 @@ shape: (5, 12)
 
 ## Querying data
 
-Neuralake provides a consistent interface for querying data across all table types:
+datarepo provides a consistent interface for querying data across all table types:
 
 ```python
 # Filter data
@@ -201,11 +201,11 @@ Neuralake provides a consistent interface for querying data across all table typ
 DeltaLake tables support caching to improve performance:
 
 ```python
-from neuralake.core.tables import DeltaCacheOptions
+from datarepo.core.tables import DeltaCacheOptions
 
 # Configure caching
 cache_options = DeltaCacheOptions(
-    file_cache_path="~/.neuralake/cache",
+    file_cache_path="~/.datarepo/cache",
     file_cache_last_checkpoint_valid_duration="30m",
 )
 

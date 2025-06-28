@@ -2,21 +2,21 @@
 <div align="center" class="github-only">
     <img src="images/banner_black.png">
     <br>
-    <a href="https://neuralake.io">
+    <a href="https://data-repo.io">
         <img src="https://img.shields.io/badge/DOCS-blue?style=for-the-badge" alt="Documentation">
     </a>
-    <a href="https://pypi.org/project/neuralake/">
-        <img src="https://img.shields.io/pypi/v/neuralake?style=for-the-badge" alt="PyPI Version">
+    <a href="https://pypi.org/project/data-repository/">
+        <img src="https://img.shields.io/pypi/v/data-repository?style=for-the-badge" alt="PyPI Version">
     </a>
 </div>
 
-# Neuralake: A simple platform for complex data
+# datarepo: a simple platform for complex data
 
-Neuralake is a simple query interface for multimodal data at any scale.
+`datarepo` is a simple query interface for multimodal data at any scale.
 
-With Neuralake, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!
+With `datarepo`, you can define a catalog, databases, and tables to query any existing data source. Once you've defined your catalog, you can spin up a static site for easy browsing or a read-only API for programmatic access. No running servers or services!
 
-The Neuralake catalog has native, declarative connectors to [Delta Lake](https://delta.io/) and [Parquet](https://parquet.apache.org/) stores. Neuralake also supports defining tables via custom Python functions, so you can connect to any data source!
+The `datarepo` catalog has native, declarative connectors to [Delta Lake](https://delta.io/) and [Parquet](https://parquet.apache.org/) stores. `datarepo` also supports defining tables via custom Python functions, so you can connect to any data source!
 
 Here's an example catalog:
 
@@ -49,7 +49,7 @@ Data engineering should be simple. That means:
 Install the latest version with:
 
 ```bash
-pip install neuralake
+pip install data-repository
 ```
 
 ### Create a table and catalog
@@ -58,7 +58,7 @@ First, create a module to define your tables (e.g., `tpch_tables.py`):
 
 ```python
 # tpch_tables.py
-from neuralake.core import (
+from datarepo.core import (
     DeltalakeTable,
     ParquetTable,
     Filter,
@@ -131,7 +131,7 @@ def supplier() -> NlkDataFrame:
 
 ```python
 # tpch_catalog.py
-from neuralake.core import Catalog, ModuleDatabase
+from datarepo.core import Catalog, ModuleDatabase
 import tpch_tables
 
 # Create a catalog
@@ -143,7 +143,7 @@ TPCHCatalog = Catalog(dbs)
 
 ```python
 >>> from tpch_catalog import TPCHCatalog
->>> from neuralake.core import Filter
+>>> from datarepo.core import Filter
 >>>
 >>> # Get part and supplier information
 >>> part_data = TCPHCatalog.db("tpc-h").table(
@@ -182,7 +182,7 @@ You can export your catalog to a static site with a single command:
 
 ```python
 # export.py
-from neuralake.export.web import export_and_generate_site
+from datarepo.export.web import export_and_generate_site
 from tpch_catalog import TPCHCatalog
 
 # Export and generate the site
@@ -197,7 +197,7 @@ export_and_generate_site(
 You can also generate a YAML configuration for [ROAPI](https://github.com/roapi/roapi):
 
 ```python
-from neuralake.export import roapi
+from datarepo.export import roapi
 from tpch_catalog import TPCHCatalog
 
 # Generate ROAPI config
@@ -206,7 +206,7 @@ roapi.generate_config(TPCHCatalog, output_file="roapi-config.yaml")
 
 ## About Neuralink
 
-Neuralake is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology.
+`datarepo` is part of Neuralink's commitment to the open source community. By maintaining free and open source software, we aim to accelerate data engineering and biotechnology.
 
 Neuralink is creating a generalized brain interface to restore autonomy to those with unmet medical needs today, and to unlock human potential tomorrow.
 

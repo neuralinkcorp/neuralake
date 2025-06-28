@@ -1,4 +1,4 @@
-from neuralake.core import (
+from datarepo.core import (
     DeltalakeTable,
     ParquetTable,
     Filter,

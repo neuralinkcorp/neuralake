@@ -1,6 +1,6 @@
 import pyarrow as pa
 
-from neuralake.core.tables.util import (
+from datarepo.core.tables.util import (
     Filter,
     Partition,
     exactly_one_equality_filter,

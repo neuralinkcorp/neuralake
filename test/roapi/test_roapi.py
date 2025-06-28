@@ -2,7 +2,7 @@ import unittest
 
 import pyarrow as pa
 
-from neuralake.core import (
+from datarepo.core import (
     DeltalakeTable,
     Filter,
     ModuleDatabase,
@@ -12,8 +12,8 @@ from neuralake.core import (
     PartitioningScheme,
     table,
 )
-from neuralake.core.catalog import Catalog
-from neuralake.export.roapi import export_to_roapi_tables
+from datarepo.core.catalog import Catalog
+from datarepo.export.roapi import export_to_roapi_tables
 from test.roapi.data import database
 
 

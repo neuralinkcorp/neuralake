@@ -1,4 +1,4 @@
-from neuralake.core import Catalog, ModuleDatabase
+from datarepo.core import Catalog, ModuleDatabase
 import tpch_tables
 import tpcds_tables
 

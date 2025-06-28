@@ -1,6 +1,6 @@
 import pyarrow as pa
 
-from neuralake.core import (
+from datarepo.core import (
     DeltalakeTable,
     Filter,
     NlkDataFrame,
@@ -9,7 +9,7 @@ from neuralake.core import (
     PartitioningScheme,
     table,
 )
-from neuralake.core.tables.util import RoapiOptions
+from datarepo.core.tables.util import RoapiOptions
 
 
 @table

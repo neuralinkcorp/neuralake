@@ -1,7 +1,7 @@
 import polars as pl
 import pyarrow as pa
 
-from neuralake.core import (
+from datarepo.core import (
     DeltalakeTable,
     NlkDataFrame,
     ParquetTable,

@@ -1,4 +1,4 @@
-name: Test, Build and Publish neuralake
+name: Test, Build and Publish datarepo
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
     
     - name: Run tests with coverage
       run: |
-        pytest test --cov=src/neuralake --cov-report=term-missing
+        pytest test --cov=src/datarepo --cov-report=term-missing
 
   code-quality:
     runs-on: ubuntu-latest
@@ -52,16 +52,16 @@ jobs:
     
     - name: Run flake8
       run: |
-        flake8 src/neuralake --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 src/neuralake --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        flake8 src/datarepo --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 src/datarepo --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
     - name: Run black
       run: |
-        black --check src/neuralake
+        black --check src/datarepo
     
     - name: Run mypy
       run: |
-        #mypy src/neuralake
+        #mypy src/datarepo
 
   build-and-publish:
     needs: [run-tests, code-quality]
@@ -86,7 +86,7 @@ jobs:
         run: |
           CURRENT_VERSION=$(grep '^version = ' pyproject.toml | cut -d'"' -f2)
           echo "Checking if version $CURRENT_VERSION exists in PyPI"
-          if pip index versions neuralake | grep -q "$CURRENT_VERSION"; then
+          if pip index versions data-repository | grep -q "$CURRENT_VERSION"; then
             echo "Version $CURRENT_VERSION already exists in PyPI"
             echo "should_build=false" >> $GITHUB_OUTPUT
             exit 0
@@ -149,3 +149,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
           publish_branch: gh-pages
+          cname: data-repo.io
