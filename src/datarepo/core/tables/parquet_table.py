@@ -115,7 +115,7 @@ class ParquetTable(TableProtocol):
         table_metadata_args: dict[str, Any] | None = None,
     ):
         if not isinstance(partitioning_scheme, PartitioningScheme):
-            raise ValueError(f"Invalid parititioning scheme, got {partitioning_scheme}")
+            raise ValueError(f"Invalid partitioning scheme, got {partitioning_scheme}")
 
         self.name = name
         self.uri = uri

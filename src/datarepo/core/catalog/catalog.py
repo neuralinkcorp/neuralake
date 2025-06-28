@@ -20,7 +20,7 @@ class ModuleDatabase(Database):
         self.db = db
 
     def __getattr__(self, name: str):
-        # HACK: to maintain backwards compability when accessing module attributes
+        # HACK: to maintain backwards compatibility when accessing module attributes
         return self._get_table(name)
 
     def get_tables(self, show_deprecated: bool = False) -> dict[str, TableProtocol]:
