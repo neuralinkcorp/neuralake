@@ -5,3 +5,5 @@ venv/
 site/
 
 docs/examples/web_catalog/
+
+.DS_Store
