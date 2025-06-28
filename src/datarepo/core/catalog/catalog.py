@@ -47,8 +47,10 @@ class ModuleDatabase(Database):
         """Initialize the ModuleDatabase.
 
         Example usage:
-            >>> import my_database_module
-            >>> db = ModuleDatabase(my_database_module)
+            ``` py
+            import my_database_module
+            db = ModuleDatabase(my_database_module)
+            ```
 
         Args:
             db (ModuleType): The database module.
@@ -63,8 +65,10 @@ class ModuleDatabase(Database):
         """Get a dictionary of tables in the database.
 
         Example usage:
-            >>> db = ModuleDatabase(my_database_module)
-            >>> tables = db.get_tables(show_deprecated=True)
+            ``` py
+            db = ModuleDatabase(my_database_module)
+            tables = db.get_tables(show_deprecated=True)
+            ```
 
         Args:
             show_deprecated (bool, optional): Whether to include deprecated tables. Defaults to False.
@@ -91,8 +95,10 @@ class ModuleDatabase(Database):
         """Get a table from the database.
 
         Example usage:
-            >>> db = ModuleDatabase(my_database_module)
-            >>> table = db.table("my_table")
+            ``` py
+            db = ModuleDatabase(my_database_module)
+            table = db.table("my_table")
+            ```
 
         Args:
             name (str): The name of the table.

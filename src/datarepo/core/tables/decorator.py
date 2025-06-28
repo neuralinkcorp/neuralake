@@ -79,11 +79,13 @@ class FunctionTable(TableProtocol):
 def table(*args, **kwargs) -> Callable[[U], U] | Callable[[Any], Callable[[U], U]]:
     """Decorator to define a table using a function.
 
-    Example usage:
-        >>> @table(description="This is a sample table.")
-        >>> def my_table_function(param1, param2):
-        >>>    # Function logic to create a table
-        >>>    return NlkDataFrame(...)
+    Example uage:
+        ``` py
+        @table(description="This is a sample table.")
+        def my_table_function(param1, param2):
+            # Function logic to create a table
+            return NlkDataFrame(...)
+        ```
 
     Returns:
         Callable[[U], U] | Callable[[Any], Callable[[U], U]]: A decorator that wraps a function to create a table.
