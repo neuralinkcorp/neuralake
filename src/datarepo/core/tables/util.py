@@ -68,13 +68,14 @@ def get_storage_options(
 
     if boto3_session is not None:
         creds = boto3_session.get_credentials()
-        storage_options = {
-            **storage_options,
-            "aws_access_key_id": creds.access_key,
-            "aws_secret_access_key": creds.secret_key,
-            "aws_session_token": creds.token,
-            "aws_region": boto3_session.region_name,
-        }
+        if creds is not None:
+            storage_options = {
+                **storage_options,
+                "aws_access_key_id": creds.access_key,
+                "aws_secret_access_key": creds.secret_key,
+                "aws_session_token": creds.token or "",
+                "aws_region": boto3_session.region_name,
+            }
 
     # Storage options passed to delta-rs need to be not null
     storage_options = {k: v for k, v in storage_options.items() if v}
@@ -93,13 +94,14 @@ def get_pyarrow_filesystem_args(
 
     if boto3_session is not None:
         creds = boto3_session.get_credentials()
-        pyarrow_filesystem_args = {
-            **pyarrow_filesystem_args,
-            "access_key": creds.access_key,
-            "secret_key": creds.secret_key,
-            "session_token": creds.token,
-            "region": boto3_session.region_name,
-        }
+        if creds is not None:
+            pyarrow_filesystem_args = {
+                **pyarrow_filesystem_args,
+                "access_key": creds.access_key,
+                "secret_key": creds.secret_key,
+                "session_token": creds.token or "",
+                "region": boto3_session.region_name,
+            }
 
     pyarrow_filesystem_args = {
         k: v for k, v in pyarrow_filesystem_args.items() if v is not None

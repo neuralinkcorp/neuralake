@@ -61,7 +61,7 @@ jobs:
     
     - name: Run mypy
       run: |
-        #mypy src/datarepo
+        mypy src/datarepo
 
   build-and-publish:
     needs: [run-tests, code-quality]

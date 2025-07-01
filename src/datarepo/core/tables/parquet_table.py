@@ -16,6 +16,8 @@ from datarepo.core.tables.metadata import (
     TableMetadata,
     TableProtocol,
     TableSchema,
+    TablePartition,
+    TableColumn,
 )
 from datarepo.core.tables.util import (
     Filter,
@@ -134,11 +136,11 @@ class ParquetTable(TableProtocol):
 
     def get_schema(self) -> TableSchema:
         partitions = [
-            {
-                "column_name": filter.column,
-                "type_annotation": type(filter.value).__name__,
-                "value": filter.value,
-            }
+            TablePartition(
+                column_name=filter.column,
+                type_annotation=type(filter.value).__name__,
+                value=filter.value,
+            )
             for filter in self.table_metadata.docs_args.get("filters", [])
         ]
 
@@ -146,14 +148,17 @@ class ParquetTable(TableProtocol):
         docs_args = {**self.table_metadata.docs_args}
         docs_args.pop("columns")
 
-        columns = None
+        columns = []
         if docs_args or not partitions:
             table: NlkDataFrame = self(**docs_args)
             columns = [
-                {
-                    "name": key,
-                    "type": type.__str__(),
-                }
+                TableColumn(
+                    column=key,
+                    type=type.__str__(),
+                    readonly=True,
+                    filter_only=False,
+                    has_stats=False,
+                )
                 for key, type in table.schema.items()
             ]
 
@@ -168,9 +173,12 @@ class ParquetTable(TableProtocol):
         **kwargs: Any,
     ) -> NlkDataFrame:
         normalized_filters = normalize_filters(filters)
-        uri, remaining_partitions, remaining_filters, applied_filters = (
-            self._build_uri_from_filters(normalized_filters)
-        )
+        (
+            uri,
+            remaining_partitions,
+            remaining_filters,
+            applied_filters,
+        ) = self._build_uri_from_filters(normalized_filters)
 
         storage_options = get_storage_options(
             boto3_session=boto3_session,
@@ -279,6 +287,10 @@ class ParquetTable(TableProtocol):
                 exactly_one_equality_filter(partition, f) for f in filters
             ]
 
+            if len(partition_filters) == 0:
+                # No filters for this partition, continue to next partition
+                continue
+
             # either 0 or multiple filters for this partition,
             # break and deal with the s3 list() query
             if any(partition_filter is None for partition_filter in partition_filters):
@@ -292,6 +304,10 @@ class ParquetTable(TableProtocol):
                 break
 
             partition_filter = partition_filters[0]
+
+            if partition_filter is None:
+                # No filter for this partition, continue to next partition
+                continue
 
             if self.partitioning_scheme == PartitioningScheme.DIRECTORY:
                 partition_component = str(partition_filter.value)
