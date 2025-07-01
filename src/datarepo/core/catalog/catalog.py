@@ -7,14 +7,12 @@ from datarepo.core.tables.metadata import TableProtocol
 
 
 class Database(Protocol):
-    def get_tables(self, show_deprecated: bool = False) -> dict[str, TableProtocol]:
-        ...
+    def get_tables(self, show_deprecated: bool = False) -> dict[str, TableProtocol]: ...
 
     def tables(self, show_deprecated: bool = False) -> list[str]:
         return list(self.get_tables(show_deprecated).keys())
 
-    def table(self, name: str, *args: Any, **kwargs: Any) -> NlkDataFrame:
-        ...
+    def table(self, name: str, *args: Any, **kwargs: Any) -> NlkDataFrame: ...
 
 
 class ModuleDatabase(Database):

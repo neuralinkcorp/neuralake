@@ -45,8 +45,7 @@ class TableProtocol(Protocol):
     # Properties used to generate the web catalog & roapi config
     table_metadata: TableMetadata
 
-    def __call__(self, **kwargs: Dict[str, Any]) -> NlkDataFrame:
-        ...
+    def __call__(self, **kwargs: Dict[str, Any]) -> NlkDataFrame: ...
 
     def get_schema(self) -> TableSchema:
         """

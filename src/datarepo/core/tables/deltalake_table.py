@@ -54,9 +54,9 @@ class DeltaCacheOptions:
             "file_cache_path": os.path.expanduser(self.file_cache_path),
         }
         if self.file_cache_last_checkpoint_valid_duration is not None:
-            opts[
-                "file_cache_last_checkpoint_valid_duration"
-            ] = self.file_cache_last_checkpoint_valid_duration
+            opts["file_cache_last_checkpoint_valid_duration"] = (
+                self.file_cache_last_checkpoint_valid_duration
+            )
         return opts
 
 
