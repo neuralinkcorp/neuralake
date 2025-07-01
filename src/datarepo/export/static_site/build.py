@@ -3,7 +3,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from hatchling.builders.hooks.plugin.interface import BuildHookInterface
+from hatchling.builders.hooks.plugin.interface import BuildHookInterface  # type: ignore
 
 
 class StaticSiteBuildHook(BuildHookInterface):

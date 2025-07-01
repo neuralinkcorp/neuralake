@@ -6,6 +6,8 @@ from datarepo.core.tables.metadata import (
     TableMetadata,
     TableProtocol,
     TableSchema,
+    TableColumn,
+    TablePartition,
 )
 
 U = TypeVar("U")
@@ -36,22 +38,25 @@ class FunctionTable(TableProtocol):
 
         # Infer partitions from filters
         partitions = [
-            {
-                "column_name": filter.column,
-                "type_annotation": type(filter.value).__name__,
-                "value": filter.value,
-            }
+            TablePartition(
+                column_name=filter.column,
+                type_annotation=type(filter.value).__name__,
+                value=filter.value,
+            )
             for filter in filters
         ]
 
-        columns = None
+        columns = []
         if self.table_metadata.docs_args or not partitions:
             fallback_table = self(**self.table_metadata.docs_args)
             columns = [
-                {
-                    "name": key,
-                    "type": type.__str__(),
-                }
+                TableColumn(
+                    column=key,
+                    type=type.__str__(),
+                    readonly=True,
+                    filter_only=False,
+                    has_stats=False,
+                )
                 for key, type in fallback_table.collect_schema().items()
             ]
 

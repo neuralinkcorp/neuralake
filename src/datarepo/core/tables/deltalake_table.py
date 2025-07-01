@@ -1,4 +1,5 @@
 # mypy: disable-error-code=override
+from __future__ import annotations
 
 import concurrent.futures
 from concurrent.futures import ThreadPoolExecutor
@@ -19,6 +20,8 @@ from datarepo.core.tables.metadata import (
     TableMetadata,
     TableProtocol,
     TableSchema,
+    TableColumn,
+    TablePartition,
 )
 from datarepo.core.tables.util import (
     DeltaRoapiOptions,
@@ -51,9 +54,9 @@ class DeltaCacheOptions:
             "file_cache_path": os.path.expanduser(self.file_cache_path),
         }
         if self.file_cache_last_checkpoint_valid_duration is not None:
-            opts["file_cache_last_checkpoint_valid_duration"] = (
-                self.file_cache_last_checkpoint_valid_duration
-            )
+            opts[
+                "file_cache_last_checkpoint_valid_duration"
+            ] = self.file_cache_last_checkpoint_valid_duration
         return opts
 
 
@@ -97,27 +100,31 @@ class DeltalakeTable(TableProtocol):
             if isinstance(f, Filter)
         }
         partitions = [
-            {
-                "column_name": col,
-                "type_annotation": str(schema.field(col).type),
-                "value": filters.get(col),
-            }
+            TablePartition(
+                column_name=col,
+                type_annotation=str(schema.field(col).type),
+                value=filters.get(col),
+            )
             for col in partition_cols
         ]
         columns = [
-            {
-                "name": name,
-                "type": str(schema.field(name).type),
-                "has_stats": name in partition_cols or name in self.stats_cols,
-            }
+            TableColumn(
+                column=name,
+                type=str(schema.field(name).type),
+                readonly=True,
+                filter_only=False,
+                has_stats=name in partition_cols or name in self.stats_cols,
+            )
             for name in schema.names
         ]
         columns += [
-            {
-                "name": expr.meta.output_name(),
-                "type": expr_type,
-                "readonly": True,
-            }
+            TableColumn(
+                column=expr.meta.output_name(),
+                type=expr_type,
+                readonly=True,
+                filter_only=False,
+                has_stats=False,
+            )
             for expr, expr_type in self.extra_cols
         ]
         return TableSchema(
@@ -196,6 +203,8 @@ class DeltalakeTable(TableProtocol):
         with pl.StringCache():
             if batches:
                 frame = pl.from_arrow(batches, rechunk=False)
+                if isinstance(frame, pl.Series):
+                    frame = frame.to_frame()
                 frame = _normalize_df(frame, self.schema, columns=columns_to_read)
             else:
                 # If dataset is empty, the returned dataframe will have no columns
@@ -214,9 +223,13 @@ class DeltalakeTable(TableProtocol):
                     if curr_schema[col] == pl.String
                 }
                 frame = (
-                    frame.cast(cat_schema)
+                    frame.with_columns(
+                        [pl.col(col).cast(pl.Categorical) for col in cat_schema]
+                    )
                     .unique(subset=self.unique_columns, maintain_order=True)
-                    .cast(curr_schema)
+                    .with_columns(
+                        [pl.col(col).cast(dtype) for col, dtype in curr_schema.items()]
+                    )
                 )
 
         if columns:
@@ -310,18 +323,21 @@ def _normalize_df(
 
     If columns is provided, only those columns will be added.
     """
-    polars_schema = pl.from_arrow(schema.empty_table()).schema
+    empty_frame = pl.from_arrow(schema.empty_table())
+    if isinstance(empty_frame, pl.Series):
+        empty_frame = empty_frame.to_frame()
+    polars_schema = empty_frame.schema
     if columns:
         # Only add back specified columns
-        polars_schema = {
-            col: dtype for col, dtype in polars_schema.items() if col in columns
-        }
+        polars_schema = pl.Schema(
+            {col: dtype for col, dtype in polars_schema.items() if col in columns}
+        )
 
     schema_columns = list(polars_schema.keys())
     missing_columns = set(schema_columns) - set(df.columns)
     return (
         df.with_columns(pl.lit(None).alias(col) for col in missing_columns)
-        .cast(polars_schema)
+        .with_columns([pl.col(col).cast(dtype) for col, dtype in polars_schema.items()])
         .select(schema_columns)
     )
 
